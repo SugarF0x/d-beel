@@ -12,5 +12,12 @@ export default defineNuxtConfig({
     globalAppMiddleware: {
       isEnabled: true
     }
+  },
+  vuetify: {
+    vuetifyOptions: {
+      theme: {
+        defaultTheme: 'dark'
+      }
+    }
   }
 })
