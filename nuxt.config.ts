@@ -4,7 +4,8 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
     '@sidebase/nuxt-auth',
-    '@invictus.codes/nuxt-vuetify'
+    '@invictus.codes/nuxt-vuetify',
+    'modules/prepare-for-yandex-functions'
   ],
   auth: {
     provider: {
