@@ -1,5 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  ssr: false,
   devtools: { enabled: true },
   modules: [
     '@sidebase/nuxt-auth',
@@ -17,6 +18,17 @@ export default defineNuxtConfig({
     vuetifyOptions: {
       theme: {
         defaultTheme: 'dark'
+      }
+    }
+  },
+  experimental: {
+    noVueServer: true
+  },
+  nitro: {
+    preset: 'aws-lambda',
+    rollupConfig: {
+      output: {
+        sourcemap: false
       }
     }
   }
