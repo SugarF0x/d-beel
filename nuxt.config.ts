@@ -25,6 +25,10 @@ export default defineNuxtConfig({
     noVueServer: true
   },
   nitro: {
+    prerender: {
+      crawlLinks: false,
+      routes: ['/']
+    },
     preset: 'aws-lambda',
     rollupConfig: {
       output: {
