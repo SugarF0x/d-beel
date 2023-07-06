@@ -8,6 +8,7 @@ export default defineNuxtConfig({
     'modules/prepare-for-yandex-functions'
   ],
   auth: {
+    baseURL: process.env.AUTH_ORIGIN,
     provider: {
       type: 'authjs'
     },
