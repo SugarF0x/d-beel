@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "build": "nuxt build --dotenv .env.prod",
+    "deploy": "sh yc-deploy.sh",
     "dev": "nuxt dev --dotenv .env.local",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
