@@ -8,7 +8,3 @@ yc serverless function version create \
   --execution-timeout 3s \
   --source-path ./.output/server.zip \
   --environment=`paste -s -d, .env.prod`
-
-aws --profile yandex \
-  s3 --endpoint-url=https://storage.yandexcloud.net \
-  cp --recursive ./.output/public s3://d-beel.sugar-fox.ru
