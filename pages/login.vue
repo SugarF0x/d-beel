@@ -8,8 +8,7 @@ definePageMeta({
 
 const { signIn } = useAuth()
 
-const route = useRoute()
-const callbackUrl = String(route.query.callbackUrl ?? '') || undefined
+const callbackUrl = useSignInCallbackUrl()
 
 const email = ref('')
 const password = ref('')
@@ -22,7 +21,7 @@ const isLoading = ref(false)
 async function submit() {
   isLoading.value = true
 
-  const signInResult = await signIn('credentials', { username: email.value, password: password.value, callbackUrl, redirect: false })
+  const signInResult = await signIn('credentials', { username: email.value, password: password.value, callbackUrl: callbackUrl.value, redirect: false })
   if (!signInResult) throw new Error('Uhoh, something went wrong')
   const { error, url } = signInResult
 
