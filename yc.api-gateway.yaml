@@ -36,4 +36,3 @@ paths:
         type: cloud_functions
         payload_format_version: "1.0"
         function_id: d4ee7jems9p4nh7tvdfa
-        integration: raw
