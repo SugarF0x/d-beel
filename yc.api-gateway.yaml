@@ -1,0 +1,39 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Test API
+servers:
+  - url: https://d5dvo6gesi1pdj6ffa7b.apigw.yandexcloud.net
+  - url: https://d-beel.sugar-fox.ru
+paths:
+  /:
+    get:
+      x-yc-apigateway-integration:
+        type: object_storage
+        bucket: d-beel.sugar-fox.ru
+        object: index.html
+  /{file+}:
+    get:
+      x-yc-apigateway-integration:
+        type: object_storage
+        bucket: d-beel.sugar-fox.ru
+        object: '{file}'
+        error_object: index.html
+      parameters:
+        - explode: false
+          in: path
+          name: file
+          required: true
+          schema:
+            type: string
+          style: simple
+  /api/{slug+}:
+    x-yc-apigateway-any-method:
+      parameters:
+        - name: slug
+          in: path
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        payload_format_version: "1.0"
+        function_id: d4ee7jems9p4nh7tvdfa
+        integration: raw
