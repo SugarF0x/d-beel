@@ -6,6 +6,7 @@
     "deploy": "yarn deploy:backend && yarn deploy:frontend",
     "deploy:frontend": "sh yc-deploy.frontend.sh",
     "deploy:backend": "sh yc-deploy.backend.sh",
+    "deploy:gateway": "sh yc-deploy.api-gateway.sh",
     "dev": "nuxt dev --dotenv .env.local",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
