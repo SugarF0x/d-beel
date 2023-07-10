@@ -3,20 +3,20 @@ info:
   version: 1.0.0
   title: Test API
 servers:
-  - url: https://d5dvo6gesi1pdj6ffa7b.apigw.yandexcloud.net
-  - url: https://d-beel.sugar-fox.ru
+  - url: ${env.API_GATEWAY_URL}
+  - url: ${env.CLIENT_ORIGIN}
 paths:
   /:
     get:
       x-yc-apigateway-integration:
         type: object_storage
-        bucket: d-beel.sugar-fox.ru
+        bucket: ${env.S3_BUCKET_ID}
         object: index.html
   /{file+}:
     get:
       x-yc-apigateway-integration:
         type: object_storage
-        bucket: d-beel.sugar-fox.ru
+        bucket: ${env.S3_BUCKET_ID}
         object: '{file}'
         error_object: index.html
       parameters:
@@ -35,4 +35,4 @@ paths:
       x-yc-apigateway-integration:
         type: cloud_functions
         payload_format_version: "1.0"
-        function_id: d4ee7jems9p4nh7tvdfa
+        function_id: ${env.CLOUD_FUNCTION_ID}

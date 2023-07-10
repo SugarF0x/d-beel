@@ -1,7 +1,9 @@
+source ./.env.cloud
+
 (cd ./.output/server && zip -r -X "../server.zip" .)
 
 yc serverless function version create \
-  --function-name=d-beel-api \
+  --function-name="$CLOUD_FUNCTION_NAME" \
   --runtime nodejs16 \
   --entrypoint index.handler \
   --memory 128m \

@@ -1,1 +1,3 @@
-yc serverless api-gateway update --id d5dvo6gesi1pdj6ffa7b --spec=yc.api-gateway.yaml
+source ./.env.cloud
+
+yc serverless api-gateway update --id "$API_GATEWAY_ID" --spec=yc.api-gateway.yaml
