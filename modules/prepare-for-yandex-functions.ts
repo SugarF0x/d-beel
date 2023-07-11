@@ -29,9 +29,8 @@ export default defineNuxtModule({
           const response = await handler(event, context)
           
           if (response.headers['set-cookie']) {
-            const sanitizedCookies = response.headers['set-cookie'].replace(/Expires=(.*?);/g, value => \`Max-Age=\${Math.floor((new Date(value).valueOf() - Date.now()) / 1000)};\`)
             response.multiValueHeaders ??= {}
-            response.multiValueHeaders['set-cookie'] = sanitizedCookies.split(/,+(?=(?:(?:[^"]*"){2})*[^"]*$)/g).map(e => e.replaceAll('"', ""))
+            response.multiValueHeaders['set-cookie'] = response.headers['set-cookie'].split(/(.*?),(.*?)($|,(?! ))/).filter(Boolean)
             delete response.headers['set-cookie']
           }
           
