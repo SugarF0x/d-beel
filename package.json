@@ -8,6 +8,9 @@
     "deploy:backend": "sh yc-deploy.backend.sh",
     "deploy:gateway": "sh yc-deploy.api-gateway.sh",
     "dev": "nuxt dev --dotenv .env.local",
+    "ydb:init": "docker pull cr.yandex/yc/yandex-docker-local-ydb:latest",
+    "ydb:run": "cd server/ydb && sh ../../yc.ydb.run.sh",
+    "ydb:stop": "docker stop ydb-local",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
