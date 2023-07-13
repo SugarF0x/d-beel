@@ -5,3 +5,5 @@ docker run -d --rm --name ydb-local -h localhost \
   -e GRPC_TLS_PORT=2135 -e GRPC_PORT=2136 -e MON_PORT=8765 \
   -e YDB_USE_IN_MEMORY_PDISKS=true \
   cr.yandex/yc/yandex-docker-local-ydb:latest
+
+echo Running YDB Dashboard on http://localhost:8765
