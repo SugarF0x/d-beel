@@ -1,10 +1,11 @@
 import { defineNuxtModule } from "@nuxt/kit"
-import { readFileSync, rmSync, writeFileSync, renameSync } from "fs"
+import { readFileSync, rmSync, writeFileSync, existsSync } from "fs"
 
 export default defineNuxtModule({
   hooks: {
     'close': (nuxt) => {
       if (process.env.NODE_ENV !== 'production') return
+      if (!existsSync('./.output/server')) return
 
       // TODO: figure out a way to post process all the imports to point directly to node_modules
 
