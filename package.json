@@ -11,7 +11,6 @@
     "ydb:init": "docker pull cr.yandex/yc/yandex-docker-local-ydb:latest",
     "ydb:run": "cd server/ydb/local-instance && sh ../yc.ydb.run.sh",
     "ydb:stop": "docker stop ydb-local",
-    "ydb:playground:run": "cd server && tsc test.ts --esModuleInterop && node test.js && rm ./test.js",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
