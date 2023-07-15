@@ -1,4 +1,4 @@
-export const useSignInCallbackUrl = () => {
+export default function useSignInCallbackUrl() {
   const route = useRoute()
 
   return computed(() => {
