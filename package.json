@@ -1,7 +1,6 @@
 {
   "name": "nuxt-app",
   "private": true,
-  "type": "module",
   "scripts": {
     "build": "nuxt build --dotenv .env.prod",
     "deploy": "yarn deploy:backend && yarn deploy:frontend",
@@ -12,6 +11,7 @@
     "ydb:init": "docker pull cr.yandex/yc/yandex-docker-local-ydb:latest",
     "ydb:run": "cd server/ydb && sh ../../yc.ydb.run.sh",
     "ydb:stop": "docker stop ydb-local",
+    "ydb:playground:run": "cd server && tsc test.ts --esModuleInterop && node test.js",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@invictus.codes/nuxt-vuetify": "^0.2.20",
-    "next-auth": "^4.22.1"
+    "next-auth": "^4.22.1",
+    "ydb-sdk": "^4.6.0"
   }
 }
