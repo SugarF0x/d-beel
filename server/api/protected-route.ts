@@ -1,8 +1,8 @@
 import { getServerSession } from '#auth'
+import useAuth from "~/server/utils/useAuth"
 
 export default defineEventHandler(async (event) => {
-  const session = await getServerSession(event)
-  if (!session) throw createError({ statusCode: 401, message: "Unauthorized" })
+  const session = await useAuth(event)
 
   console.log(session)
   return { response: { data: 'pog' } }
