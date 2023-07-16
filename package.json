@@ -1,6 +1,7 @@
 {
   "name": "nuxt-app",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "nuxt build --dotenv .env.prod",
     "deploy": "yarn deploy:backend && yarn deploy:frontend",
@@ -26,6 +27,8 @@
   },
   "dependencies": {
     "@invictus.codes/nuxt-vuetify": "^0.2.20",
+    "@yandex-cloud/nodejs-sdk": "^2.4.7",
+    "events": "^3.3.0",
     "next-auth": "^4.22.1",
     "ydb-sdk": "^4.6.0"
   }

@@ -1,6 +1,6 @@
-import { Driver, getCredentialsFromEnv, Session } from "ydb-sdk"
+import { Driver, getCredentialsFromEnv, Session } from 'ydb-sdk'
 
-export default async function useYDBSession(callback: (session: Session) => Promise<void>) {
+export default async function useYDBSession<T = unknown>(callback: (session: Session) => Promise<T>) {
   const driver = new Driver({
     endpoint: process.env.YDB_ENDPOINT,
     database: process.env.YDB_DATABASE,
@@ -9,7 +9,9 @@ export default async function useYDBSession(callback: (session: Session) => Prom
 
   if (!await driver.ready(10000)) throw new Error('Establishing YDB connection timed out')
 
-  await driver.tableClient.withSession(callback)
+  const result = await driver.tableClient.withSession(callback)
 
   await driver.destroy()
+
+  return result
 }
