@@ -11,6 +11,7 @@ yc serverless function version create \
   --memory 128m \
   --execution-timeout 3s \
   --source-path ./.output/temp/server.zip \
-  --environment=`paste -s -d, .env.prod`
+  --environment=`paste -s -d, .env.prod` \
+  --service-account-id="$SERVICE_ACCOUNT_ID"
 
 rm -rf ./.output/temp
