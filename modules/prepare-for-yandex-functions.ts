@@ -22,6 +22,7 @@ const wrapperJs: string =
         
 async function wrapper(event, context) {
   if (event.body && event.isBase64Encoded) event.body = atob(event.body)
+  if (context?.token?.access_token) process.env.YDB_ACCESS_TOKEN_CREDENTIALS = context.token.access_token
   
   const response = await handler(event, context)
   
