@@ -9,6 +9,7 @@
     "deploy:backend": "sh yc-deploy.backend.sh",
     "deploy:gateway": "sh yc-deploy.api-gateway.sh",
     "dev": "nuxt dev --dotenv .env.local",
+    "dev:update-iam-token": "sh yc.update-local-iam-token.sh",
     "ydb:init": "docker pull cr.yandex/yc/yandex-docker-local-ydb:latest",
     "ydb:run": "cd server/ydb/local-instance && sh ../yc.ydb.run.sh",
     "ydb:stop": "docker stop ydb-local",
