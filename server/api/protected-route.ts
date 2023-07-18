@@ -1,4 +1,3 @@
-import { getServerSession } from '#auth'
 import useAuth from "~/server/utils/useAuth"
 
 export default defineEventHandler(async (event) => {

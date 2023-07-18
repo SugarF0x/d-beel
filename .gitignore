@@ -22,5 +22,8 @@ logs
 .env.*
 !.env.example
 
+# Temp build files
+*.temp.*
+
 # Local YDB instance
 server/ydb/local-instance

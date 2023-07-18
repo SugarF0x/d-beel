@@ -3,20 +3,20 @@ info:
   version: 1.0.0
   title: Test API
 servers:
-  - url: ${env.API_GATEWAY_URL}
-  - url: ${env.CLIENT_ORIGIN}
+  - url: $API_GATEWAY_URL
+  - url: $CLIENT_ORIGIN
 paths:
   /:
     get:
       x-yc-apigateway-integration:
         type: object_storage
-        bucket: ${env.S3_BUCKET_ID}
+        bucket: $S3_BUCKET_ID
         object: index.html
   /{file+}:
     get:
       x-yc-apigateway-integration:
         type: object_storage
-        bucket: ${env.S3_BUCKET_ID}
+        bucket: $S3_BUCKET_ID
         object: '{file}'
         error_object: index.html
       parameters:
@@ -34,5 +34,6 @@ paths:
           in: path
       x-yc-apigateway-integration:
         type: cloud_functions
-        payload_format_version: "1.0"
-        function_id: ${env.CLOUD_FUNCTION_ID}
+        payload_format_version: '1.0'
+        function_id: $CLOUD_FUNCTION_ID
+        service_account_id: $SERVICE_ACCOUNT_ID
