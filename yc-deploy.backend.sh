@@ -1,6 +1,8 @@
+rollup -c
+
 source ./.env.cloud
 
-(cd ./.output/server && zip -r -X "../server.zip" .)
+(cd ./.output/temp/server-to-zip && zip -r -X "../server.zip" .)
 
 yc serverless function version create \
   --function-name="$CLOUD_FUNCTION_NAME" \
@@ -8,5 +10,7 @@ yc serverless function version create \
   --entrypoint index.handler \
   --memory 128m \
   --execution-timeout 3s \
-  --source-path ./.output/server.zip \
+  --source-path ./.output/temp/server.zip \
   --environment=`paste -s -d, .env.prod`
+
+rm -rf ./.output/temp

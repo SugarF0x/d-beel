@@ -1,23 +1,14 @@
 import { defineNuxtModule } from "@nuxt/kit"
-import { readFileSync, rmSync, writeFileSync, existsSync } from "fs"
+import { rmSync, writeFileSync, existsSync } from "fs"
 
 export default defineNuxtModule({
   hooks: {
     'close': (nuxt) => {
       if (process.env.NODE_ENV !== 'production') return
-      if (!existsSync('./.output/server')) return
-
-      // TODO: figure out a way to post process all the imports to point directly to node_modules
+      if (!existsSync('./.output/server/node_modules')) return
 
       rmSync('./.output/server/node_modules', { recursive: true, force: true })
-
-      const serverPackage = JSON.parse(readFileSync('./.output/server/package.json', 'utf-8'))
-
-      serverPackage.type = "module"
-      serverPackage.dependencies = serverPackage.bundledDependencies
-      delete serverPackage.bundledDependencies
-
-      writeFileSync('./.output/server/package.json', JSON.stringify(serverPackage, null, 2))
+      rmSync('./.output/server/package.json')
 
       // TODO: figure out a way of better managing this template
 
