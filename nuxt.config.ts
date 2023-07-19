@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     '@invictus.codes/nuxt-vuetify',
     'modules/prepare-for-yandex-functions'
   ],
+  css: ['~/assets/styles/global.scss'],
   auth: {
     baseURL: process.env.AUTH_ORIGIN,
     provider: {
