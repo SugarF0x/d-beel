@@ -5,6 +5,7 @@ export default defineNuxtConfig({
   modules: [
     '@sidebase/nuxt-auth',
     '@invictus.codes/nuxt-vuetify',
+    '@vueuse/nuxt',
     'modules/prepare-for-yandex-functions'
   ],
   css: ['~/assets/styles/global.scss'],
