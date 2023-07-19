@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build --dotenv .env.prod",
+    "bd": "yarn build && yarn deploy",
     "deploy": "yarn deploy:backend && yarn deploy:frontend",
     "deploy:frontend": "sh yc-deploy.frontend.sh",
     "deploy:backend": "sh yc-deploy.backend.sh",
