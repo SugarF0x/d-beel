@@ -7,8 +7,12 @@ definePageMeta({
 })
 
 const { signIn } = useAuth()
+const route = useRoute()
 
-const callbackUrl = useSignInCallbackUrl()
+const callbackUrl = computed(() => {
+  const callbackUrlParam = route.query.callbackUrl
+  return typeof callbackUrlParam === "string" && callbackUrlParam.length > 0 ? callbackUrlParam : "/"
+})
 
 const email = ref('')
 const password = ref('')
