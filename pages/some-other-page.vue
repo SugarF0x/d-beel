@@ -1,4 +1,6 @@
 <script setup lang="ts">
+definePageMeta({ auth: true })
+
 const data = ref<unknown>(null)
 
 async function getEntries() {
