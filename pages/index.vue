@@ -4,7 +4,7 @@ const { data, signOut } = useAuth()
 const authButtonText = computed(() => !data.value ? 'Войти' : 'Выйти')
 
 function handleAuth() {
-  if (!!data.value) navigateTo('/login')
+  if (!data.value) navigateTo('/login')
   else signOut()
 }
 </script>
