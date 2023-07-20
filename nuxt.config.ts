@@ -2,6 +2,9 @@
 export default defineNuxtConfig({
   ssr: false,
   devtools: { enabled: true },
+  typescript: {
+    strict: true
+  },
   modules: [
     '@sidebase/nuxt-auth',
     '@invictus.codes/nuxt-vuetify',

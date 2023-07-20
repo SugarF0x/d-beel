@@ -39,6 +39,7 @@
     "@yandex-cloud/nodejs-sdk": "^2.4.7",
     "events": "^3.3.0",
     "next-auth": "^4.22.1",
-    "ydb-sdk": "^4.6.0"
+    "ydb-sdk": "^4.6.0",
+    "zod": "^3.21.4"
   }
 }
