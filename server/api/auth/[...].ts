@@ -2,6 +2,9 @@ import { NuxtAuthHandler } from "#auth"
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { User, Session } from "next-auth"
 import { JWT } from "next-auth/jwt"
+import useYDBSession from "~/server/ydb/utils/useSession"
+import { TypedData } from "ydb-sdk"
+import { PersistedPassword, verifyPassword } from "~/server/utils/passwordManagement"
 
 // @ts-expect-error You need to use .default here for it to work during SSR. May be fixed via Vite at some point
 const Provider = CredentialsProvider.default ?? CredentialsProvider
@@ -15,13 +18,15 @@ export default NuxtAuthHandler({
         username: { label: 'Username', type: 'text', placeholder: '(hint: jsmith)' },
         password: { label: 'Password', type: 'password', placeholder: '(hint: hunter2)' }
       },
-      authorize(credentials: { username: string, password: string }): User | null {
-        const user = { id: '1', username: 'jsmith', password: 'hunter2' }
+      async authorize(credentials: { username: string, password: string }): Promise<User | null> {
+        const persistedPassword = await useYDBSession(async (session) => {
+          const { resultSets } = await session.executeQuery(`SELECT * FROM user WHERE username = "${credentials.username}" LIMIT 1;`)
+          return TypedData.createNativeObjects(resultSets[0])[0] as unknown as PersistedPassword
+        })
 
-        if (credentials?.username === user.username && credentials?.password === user.password) return { username: user.username }
+        if (!persistedPassword || !(await verifyPassword(persistedPassword, credentials.password))) return null
 
-        console.error('Warning: Malicious login attempt registered, bad credentials provided')
-        return null
+        return { username: credentials.username }
       }
     })
   ],

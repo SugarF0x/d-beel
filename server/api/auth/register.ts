@@ -27,7 +27,7 @@ async function getPayload(event: H3Event) {
 
 async function doesUserAlreadyExist(username: string): Promise<boolean> {
   return await useYDBSession(async (session) => {
-    const { resultSets } = await session.executeQuery(`SELECT COUNT(username) as count FROM user WHERE username = "${username}";`)
+    const { resultSets } = await session.executeQuery(`SELECT COUNT(username) as count FROM user WHERE username = "${username}" LIMIT 1;`)
     return Boolean(TypedData.createNativeObjects(resultSets[0])[0].count)
   })
 }
