@@ -2,13 +2,16 @@ import useYDBSession from "~/server/ydb/utils/useSession"
 import { TypedData } from "ydb-sdk"
 import { H3Event } from "h3"
 import { z } from 'zod'
+import { generateHashPassword } from "~/server/utils/passwordManagement"
 
 export default defineEventHandler(async (event) => {
   const { username, password } = await getPayload(event)
 
   if (await doesUserAlreadyExist(username)) throw createError({ statusCode: 409 })
 
-  throw createError({ statusCode: 500 })
+  await createUser(username, password)
+
+  return true
 })
 
 async function getPayload(event: H3Event) {
@@ -26,5 +29,17 @@ async function doesUserAlreadyExist(username: string): Promise<boolean> {
   return await useYDBSession(async (session) => {
     const { resultSets } = await session.executeQuery(`SELECT COUNT(username) as count FROM user WHERE username = "${username}";`)
     return Boolean(TypedData.createNativeObjects(resultSets[0])[0].count)
+  })
+}
+
+async function createUser(username: string, password: string) {
+  const { hash, salt, iterations } = await generateHashPassword(password)
+
+  await useYDBSession(async (session) => {
+    const createdAt = new Date().toISOString().split('.')[0] + 'Z'
+    await session.executeQuery(`
+      INSERT INTO user (username, created_at, hash, salt, iterations) 
+      VALUES ("${username}", Datetime("${createdAt}"), "${hash}", "${salt}", ${iterations});
+    `)
   })
 }
