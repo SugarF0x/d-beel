@@ -12,10 +12,10 @@ CREATE TABLE hots_post
 `
 
 export interface HotsPost {
-  username: string
-  created_at: Date
   comment: string
-  created_by: string
-  hero: string
+  created_at: Date
+  created_by: string | null
+  hero: string | null
   rating: number
+  username: string
 }

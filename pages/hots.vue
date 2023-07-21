@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { HotsPost } from "~/server/ydb/tables/hots_post"
+
 useHead({
   title: 'Дебилы Шторма'
 })
 
-const dummyData = {
+const dummyData: HotsPost = {
   comment: "Ёбаный овощ, на ласт пике видит, что нам нужен танк, а брузер уже имеется, но нет, блядь, я буду играть в молчанку, дрочить себе в anal sex и в итоге всё равно пикать boy next door, после чего флеймит"
   created_at: new Date("2021-02-26T22:15:20Z"),
   created_by: null,
