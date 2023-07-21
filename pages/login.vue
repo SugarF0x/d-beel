@@ -16,41 +16,47 @@ const callbackUrl = computed(() => {
 
 const username = ref('')
 const password = ref('')
-const errors = reactive({
-  username: '',
-  password: '',
-})
 
-const isLoading = ref(false)
-async function login() {
+const errorMessage = ref('')
+
+async function authCallWrapper(callback: () => Promise<void>) {
+  errorMessage.value = ''
   isLoading.value = true
-
-  const signInResult = await signIn('credentials', { username: username.value, password: password.value, callbackUrl: callbackUrl.value, redirect: false })
-  if (!signInResult) throw new Error('Uhoh, something went wrong')
-  const { error, url } = signInResult
-
-  if (error) alert('You have made a terrible mistake while entering your credentials')
-  else return navigateTo(url, { external: true })
-
+  await callback()
   isLoading.value = false
 }
 
-async function register() {
-  isLoading.value = true
+const isLoading = ref(false)
+async function login() {
+  await authCallWrapper(async () => {
+    const signInResult = await signIn('credentials', { username: username.value, password: password.value, callbackUrl: callbackUrl.value, redirect: false })
+    if (!signInResult) throw new Error('Uhoh, something went wrong')
+    const { error, url } = signInResult
 
-  const response = await $fetch('/api/auth/register', {
-    method: 'post',
-    body: {
-      username: username.value,
-      password: password.value
-    }
-  }).catch(error => {
-    console.log('Code: ', error.statusCode)
+    if (error) return errorMessage.value = 'Неправильный логин или пароль'
+    else return navigateTo(url, { external: true })
   })
+}
 
-  if (response) await login()
+async function register() {
+  await authCallWrapper(async () => {
+    const response = await $fetch('/api/auth/register', {
+      method: 'post',
+      body: {
+        username: username.value,
+        password: password.value
+      }
+    }).catch(error => {
+      const statusCode = error.statusCode as number
 
-  isLoading.value = false
+      (() => {
+        if (statusCode === 400) return errorMessage.value = 'Неправильный формат данных'
+        if (statusCode === 409) return errorMessage.value = 'Данный пользователь уже существует'
+      })()
+    })
+
+    if (response) await login()
+  })
 }
 </script>
 
@@ -66,7 +72,7 @@ async function register() {
           v-model="username"
           label="Логин"
           placeholder="вася нагибатор 666"
-          :error-messages="errors.username"
+          :error-messages="errorMessage"
           required
         />
 
@@ -74,7 +80,6 @@ async function register() {
           v-model="password"
           type="password"
           label="Пароль"
-          :error-messages="errors.password"
           required
         />
 
