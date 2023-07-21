@@ -1,3 +1,5 @@
+import { HotsHero } from "~/server/ydb/types/hots/heroes"
+
 export const createHotsPostTableQuery = `
 CREATE TABLE hots_post
 (
@@ -15,7 +17,7 @@ export interface HotsPost {
   comment: string
   created_at: Date
   created_by: string | null
-  hero: string | null
+  hero: HotsHero | null
   rating: number
   username: string
 }
