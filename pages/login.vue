@@ -14,7 +14,7 @@ const callbackUrl = computed(() => {
   return typeof callbackUrlParam === "string" && callbackUrlParam.length > 0 ? callbackUrlParam : "/"
 })
 
-const email = ref('')
+const username = ref('')
 const password = ref('')
 const errors = reactive({
   username: '',
@@ -22,15 +22,33 @@ const errors = reactive({
 })
 
 const isLoading = ref(false)
-async function submit() {
+async function login() {
   isLoading.value = true
 
-  const signInResult = await signIn('credentials', { username: email.value, password: password.value, callbackUrl: callbackUrl.value, redirect: false })
+  const signInResult = await signIn('credentials', { username: username.value, password: password.value, callbackUrl: callbackUrl.value, redirect: false })
   if (!signInResult) throw new Error('Uhoh, something went wrong')
   const { error, url } = signInResult
 
   if (error) alert('You have made a terrible mistake while entering your credentials')
   else return navigateTo(url, { external: true })
+
+  isLoading.value = false
+}
+
+async function register() {
+  isLoading.value = true
+
+  const response = await $fetch('/api/auth/register', {
+    method: 'post',
+    body: {
+      username: username.value,
+      password: password.value
+    }
+  }).catch(error => {
+    console.log('Code: ', error.statusCode)
+  })
+
+  if (response) await login()
 
   isLoading.value = false
 }
@@ -43,13 +61,12 @@ async function submit() {
         <h1 class="title text-h2">Вход</h1>
       </div>
 
-      <form @submit.prevent="submit">
+      <form>
         <v-text-field
-          v-model="email"
-          type="mail"
-          label="Почта"
-          placeholder="student@mgimo.ru"
-          :error-messages="errors.email"
+          v-model="username"
+          label="Логин"
+          placeholder="вася нагибатор 666"
+          :error-messages="errors.username"
           required
         />
 
@@ -61,8 +78,12 @@ async function submit() {
           required
         />
 
-        <v-btn type="submit" class="bg-primary" :loading="isLoading">
+        <v-btn class="bg-primary" :loading="isLoading" @click="login">
           Войти
+        </v-btn>
+
+        <v-btn class="bg-secondary" :loading="isLoading" @click="register">
+          Зарегистрироваться
         </v-btn>
       </form>
     </v-sheet>
