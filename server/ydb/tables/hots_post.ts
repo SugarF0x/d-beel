@@ -1,4 +1,4 @@
-export default `
+export const createHotsPostTableQuery = `
 CREATE TABLE hots_post
 (
     username Utf8 NOT NULL,
@@ -10,3 +10,12 @@ CREATE TABLE hots_post
     PRIMARY KEY (username, created_at)
 );
 `
+
+export interface HotsPost {
+  username: string
+  created_at: Date
+  comment: string
+  created_by: string
+  hero: string
+  rating: number
+}
