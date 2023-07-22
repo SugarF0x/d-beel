@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { HotsPostRow } from "~/server/ydb/tables/hots_post"
+import { format } from 'date-fns'
 
 const { created_at, created_by, hero, rating, username, comment } = defineProps<HotsPostRow>()
 </script>
@@ -8,9 +9,29 @@ const { created_at, created_by, hero, rating, username, comment } = defineProps<
   <div class="hots-post">
     <v-img class="banner" :src="`/img/hots/heroes/banner/${String(hero)}.jpg`" />
 
-    <p class="comment">
-      {{ comment }}
-    </p>
+    <div class="container">
+      <div class="info">
+        <h2>{{ username }}</h2>
+        <table>
+          <tr>
+            <th>Герой</th>
+            <td>{{ hero ?? "???" }}</td>
+          </tr>
+          <tr>
+            <th>Рейтинг</th>
+            <td>{{ rating }} / 5</td>
+          </tr>
+          <tr>
+            <th>Дата публикации</th>
+            <td>{{ format(new Date(created_at), 'dd.MM.yyyy') }}</td>
+          </tr>
+        </table>
+      </div>
+
+      <p class="comment">
+        {{ comment }}
+      </p>
+    </div>
   </div>
 </template>
 
@@ -21,8 +42,45 @@ const { created_at, created_by, hero, rating, username, comment } = defineProps<
   background-color: #0a1133;
 }
 
+.container {
+  position: relative;
+  margin-top: 20px;
+}
+
+.info {
+  position: absolute;
+  width: 100%;
+  bottom: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  table {
+    border: 1px solid #5266cc;
+    background-color: rgba(10,17,51,.9);
+
+    border-spacing: 0;
+
+    th, td {
+      text-align: left;
+      padding: 0 10px;
+    }
+
+    tr:not(:last-child) {
+      th, td {
+        border-bottom: 1px solid #5266cc;
+      }
+    }
+
+    th {
+      border-right: 1px solid #5266cc;
+    }
+  }
+}
+
 .comment {
-  margin: 20px;
+  padding: 20px;
 }
 
 .banner {

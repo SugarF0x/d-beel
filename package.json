@@ -37,6 +37,7 @@
     "@vueuse/components": "^10.2.1",
     "@vueuse/nuxt": "^10.2.1",
     "@yandex-cloud/nodejs-sdk": "^2.4.7",
+    "date-fns": "^2.30.0",
     "events": "^3.3.0",
     "next-auth": "^4.22.1",
     "ydb-sdk": "^4.6.0",
