@@ -38,12 +38,8 @@ const dummyData: HotsPostRow[] = [
   <div class="wrapper">
     <v-img class="hero" src="/img/hots/hero.png" />
 
-    <v-container>
-      <v-row>
-        <v-col v-for="(post, index) in dummyData" :key="`${post.username}-${index}`" col="4">
-          <hots-post v-bind="post" />
-        </v-col>
-      </v-row>
+    <v-container class="grid-container">
+      <hots-post v-for="(post, index) in cachedData" :key="`${post.username}-${index}`" v-bind="post" />
     </v-container>
   </div>
 </template>
@@ -52,6 +48,25 @@ const dummyData: HotsPostRow[] = [
 .wrapper {
   flex: 1;
   background: url('/img/hots/background.jpg') center;
+}
+
+.grid-container {
+  columns: 1;
+
+  @media only screen and (min-width: 640px) {
+    columns: 2;
+  }
+
+  @media only screen and (min-width: 960px) {
+    columns: 3;
+  }
+
+  column-gap: 20px;
+
+  & > div+div {
+    margin-top: 20px;
+    break-inside: avoid;
+  }
 }
 
 .hero {
