@@ -2,10 +2,10 @@ import useYDBSession from "~/server/ydb/utils/useSession"
 import { TypedData } from "ydb-sdk"
 import { z } from 'zod'
 import { generateHashPassword } from "~/server/utils/passwordManagement"
-import getPayload from "~/server/utils/getPayload"
+import { getBodyPayload } from "~/server/utils/getPayload"
 
 export default defineEventHandler(async (event) => {
-  const { username, password } = await getPayload(event, z.object({ username: z.string(), password: z.string() }))
+  const { username, password } = await getBodyPayload(event, z.object({ username: z.string(), password: z.string() }))
 
   if (await doesUserAlreadyExist(username)) throw createError({ statusCode: 409 })
 
