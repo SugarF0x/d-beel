@@ -5,14 +5,19 @@ useHead({
   title: 'Дебилы Шторма'
 })
 
-const { data } = await useFetch('/api/hots/get-posts-page', { params: { page: 1 } })
+const page = ref(1)
+watch([page], () => refresh())
+
+const { data, refresh, pending } = await useFetch('/api/hots/posts-page', { params: { page } })
 </script>
 
 <template>
   <div class="wrapper">
     <v-img class="hero" src="/img/hots/hero.png" />
 
-    <v-container class="grid-container">
+    <v-pagination v-model="page" :length="12" total-visible="5" :disabled="pending" />
+
+    <v-container class="grid-container" :class="{ loading: pending }">
       <hots-post v-for="(post, index) in data as HotsPostRow[]" :key="`${post.username}-${index}`" v-bind="post" />
     </v-container>
   </div>
@@ -22,6 +27,10 @@ const { data } = await useFetch('/api/hots/get-posts-page', { params: { page: 1 
 .wrapper {
   flex: 1;
   background: url('/img/hots/background.jpg') center;
+}
+
+.loading {
+  opacity: .5
 }
 
 .grid-container {
