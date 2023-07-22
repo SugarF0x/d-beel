@@ -18,8 +18,8 @@ const { created_at, created_by, hero, rating, username, comment } = defineProps<
             <td>{{ hero ?? "???" }}</td>
           </tr>
           <tr>
-            <th>Рейтинг</th>
-            <td>{{ rating }} / 5</td>
+            <th>Автор</th>
+            <td>{{ created_by ?? "???" }}</td>
           </tr>
           <tr>
             <th>Дата публикации</th>
@@ -31,6 +31,8 @@ const { created_at, created_by, hero, rating, username, comment } = defineProps<
       <p class="comment">
         {{ comment }}
       </p>
+
+      <v-rating class="rating" :readonly="true" :model-value="rating" />
     </div>
   </div>
 </template>
@@ -45,6 +47,12 @@ const { created_at, created_by, hero, rating, username, comment } = defineProps<
 .container {
   position: relative;
   margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.rating {
+  align-self: center;
 }
 
 .info {
@@ -80,7 +88,7 @@ const { created_at, created_by, hero, rating, username, comment } = defineProps<
 }
 
 .comment {
-  padding: 20px;
+  padding: 20px 20px 0 20px;
 }
 
 .banner {
