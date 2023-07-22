@@ -13,7 +13,7 @@ CREATE TABLE hots_post
 );
 `
 
-export interface HotsPost {
+export interface HotsPostRow {
   comment: string
   created_at: Date
   created_by: string | null

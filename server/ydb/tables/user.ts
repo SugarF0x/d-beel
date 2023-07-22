@@ -10,7 +10,7 @@ CREATE TABLE user
 );
 `
 
-export interface UserTable {
+export interface UserTableRow {
   username: string
   created_at: Date
   hash: string
