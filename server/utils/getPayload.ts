@@ -8,8 +8,8 @@ export async function getBodyPayload<T extends ZodObject<any>>(event: H3Event, s
   return body as z.infer<T>
 }
 
-export function getParamPayload<T extends ZodObject<any>>(event: H3Event, schema: T): z.infer<T> {
-  const params = getRouterParams(event)
-  if (!schema.safeParse(params).success) throw createError({ statusCode: 400 })
-  return params as z.infer<T>
+export function getQueryPayload<T extends ZodObject<any>>(event: H3Event, schema: T): z.infer<T> {
+  const query = getQuery(event)
+  if (!schema.safeParse(query).success) throw createError({ statusCode: 400 })
+  return query as z.infer<T>
 }
