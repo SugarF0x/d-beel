@@ -1,11 +1,11 @@
 import useYDBSession from "~/server/ydb/utils/useSession"
 import { TypedData } from "ydb-sdk"
-import { H3Event } from "h3"
 import { z } from 'zod'
 import { generateHashPassword } from "~/server/utils/passwordManagement"
+import getPayload from "~/server/utils/getPayload"
 
 export default defineEventHandler(async (event) => {
-  const { username, password } = await getPayload(event)
+  const { username, password } = await getPayload(event, z.object({ username: z.string(), password: z.string() }))
 
   if (await doesUserAlreadyExist(username)) throw createError({ statusCode: 409 })
 
@@ -13,17 +13,6 @@ export default defineEventHandler(async (event) => {
 
   return true
 })
-
-async function getPayload(event: H3Event) {
-  const PayloadSchema = z.object({
-    username: z.string(),
-    password: z.string()
-  })
-
-  const body = await readBody(event)
-  if (!PayloadSchema.safeParse(body).success) throw createError({ statusCode: 400 })
-  return body as z.infer<typeof PayloadSchema>
-}
 
 async function doesUserAlreadyExist(username: string): Promise<boolean> {
   return await useYDBSession(async (session) => {
