@@ -7,6 +7,10 @@ const { created_at, created_by, hero, rating, username, comment } = defineProps<
 <template>
   <div class="hots-post">
     <v-img class="banner" :src="`/img/hots/heroes/banner/${String(hero)}.jpg`" />
+
+    <p class="comment">
+      {{ comment }}
+    </p>
   </div>
 </template>
 
@@ -15,6 +19,10 @@ const { created_at, created_by, hero, rating, username, comment } = defineProps<
   box-shadow: 0 0 15px 6px rgba(0,0,0,.4);
   border: 1px solid rgba(153,204,255,.2);
   background-color: #0a1133;
+}
+
+.comment {
+  margin: 20px;
 }
 
 .banner {
