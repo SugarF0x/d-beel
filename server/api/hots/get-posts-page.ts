@@ -4,8 +4,7 @@ import useYDBSession from "~/server/ydb/utils/useSession"
 import { HotsPostRow } from "~/server/ydb/tables/hots_post"
 import { TypedData } from 'ydb-sdk';
 import stringToNumber from "~/utils/zod/stringToNumber"
-
-const HOTS_POSTS_PER_PAGE = 12
+import { HOTS_POSTS_PER_PAGE } from "~/server/api/hots/get-total-posts"
 
 export default defineEventHandler(async (event) => {
   const { page } = await getQueryPayload(event, z.object({ page: z.string().transform(stringToNumber) }))
