@@ -26,7 +26,7 @@ const { data, refresh, pending } = await useFetch('/api/hots/posts-page', { para
 <style scoped lang="scss">
 .wrapper {
   flex: 1;
-  background: url('/img/hots/background.jpg') center;
+  background: url('/img/hots/background.jpg') center fixed;
 }
 
 .loading {
