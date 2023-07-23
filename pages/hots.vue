@@ -16,7 +16,12 @@ const { data: hotsPosts, refresh, pending } = await useFetch('/api/hots/posts-pa
   <div class="wrapper">
     <v-img class="hero" src="/img/hots/hero.png" />
 
-    <v-pagination v-model="page" :length="totalPosts.totalPages" total-visible="5" :disabled="pending" />
+    <v-container class="controls-container">
+      <v-pagination v-model="page" :length="totalPosts.totalPages" total-visible="5" :disabled="pending" />
+      <v-text-field />
+      <v-btn>Поиск</v-btn>
+      <v-btn>Создать</v-btn>
+    </v-container>
 
     <v-container class="grid-container" :class="{ loading: pending }">
       <hots-post v-for="(post, index) in hotsPosts as HotsPostRow[]" :key="`${post.username}-${index}`" v-bind="post" />
@@ -31,6 +36,11 @@ const { data: hotsPosts, refresh, pending } = await useFetch('/api/hots/posts-pa
   flex: 1;
   background: url('/img/hots/background.jpg') center fixed;
   padding-bottom: 24px;
+}
+
+.controls-container {
+  display: flex;
+  gap: 8px;
 }
 
 .loading {
