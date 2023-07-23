@@ -2,7 +2,6 @@ import { NuxtAuthHandler } from "#auth"
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { User, Session } from "next-auth"
 import { JWT } from "next-auth/jwt"
-import useYDBSession from "~/server/ydb/utils/useSession"
 import { TypedData, TypedValues } from "ydb-sdk"
 import { PersistedPassword, verifyPassword } from "~/server/utils/passwordManagement"
 import { z } from "zod"

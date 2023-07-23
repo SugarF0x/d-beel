@@ -1,4 +1,3 @@
-import useYDBSession from "~/server/ydb/utils/useSession"
 import { TypedData } from "ydb-sdk"
 
 export const HOTS_POSTS_PER_PAGE = 12

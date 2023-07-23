@@ -1,8 +1,5 @@
-import useYDBSession from "~/server/ydb/utils/useSession"
 import { TypedData, TypedValues } from "ydb-sdk"
 import { z } from 'zod'
-import { generateHashPassword } from "~/server/utils/passwordManagement"
-import { getBodyPayload } from "~/server/utils/getPayload"
 
 export default defineEventHandler(async (event) => {
   const { username, password } = await getBodyPayload(event, z.object({ username: z.string(), password: z.string() }))

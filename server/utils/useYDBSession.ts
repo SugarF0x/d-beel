@@ -1,6 +1,6 @@
 import { Driver, getCredentialsFromEnv, Session } from 'ydb-sdk'
 
-export default async function useYDBSession<T = unknown>(callback: (session: Session) => Promise<T>) {
+export default async function <T = unknown>(callback: (session: Session) => Promise<T>) {
   const driver = new Driver({
     endpoint: process.env.YDB_ENDPOINT,
     database: process.env.YDB_DATABASE,
