@@ -65,7 +65,7 @@ const isLoading = computed(() => searchStatus.value === 'pending' || isFetching.
     <v-img class="hero" src="/img/hots/hero.png" />
 
     <v-container class="controls-container">
-      <v-pagination v-model="page" :length="postsMeta.totalPages" :total-visible="Math.min(postsMeta.totalPages, 5)" :disabled="isLoading" />
+      <v-pagination v-model="page" :length="postsMeta.totalPages" :total-visible="Math.min(postsMeta.totalPages, 5)" :disabled="isLoading || !!searchResults" />
       <v-text-field v-model="searchValue" hide-details label="Имя дебила" @keyup.enter="() => searchValue.length && search()" />
 
       <div class="action">
@@ -78,7 +78,7 @@ const isLoading = computed(() => searchStatus.value === 'pending' || isFetching.
       <hots-post v-for="(post, index) in searchResults ?? posts[debouncedPageIndex]" :key="`${post.username}-${index}`" v-bind="post" />
     </v-container>
 
-    <v-pagination v-model="page" :length="postsMeta.totalPages" :total-visible="Math.min(postsMeta.totalPages, 5)" :disabled="isLoading" />
+    <v-pagination v-model="page" :length="postsMeta.totalPages" :total-visible="Math.min(postsMeta.totalPages, 5)" :disabled="isLoading || !!searchResults" />
   </div>
 </template>
 
