@@ -5,6 +5,7 @@ import { JWT } from "next-auth/jwt"
 import useYDBSession from "~/server/ydb/utils/useSession"
 import { TypedData, TypedValues } from "ydb-sdk"
 import { PersistedPassword, verifyPassword } from "~/server/utils/passwordManagement"
+import { z } from "zod"
 
 // @ts-expect-error You need to use .default here for it to work during SSR. May be fixed via Vite at some point
 const Provider = CredentialsProvider.default ?? CredentialsProvider
@@ -17,21 +18,25 @@ export default NuxtAuthHandler({
       credentials: {
         username: { label: 'Username', type: 'text', placeholder: '(hint: jsmith)' },
         password: { label: 'Password', type: 'password', placeholder: '(hint: hunter2)' }
-      }, // TODO: add zod here
-      async authorize(credentials: { username: string, password: string }): Promise<User | null> {
+      },
+      async authorize(credentials: Record<string, unknown>): Promise<User | null> {
+        const payload = validateCredentials(credentials)
+        if (!payload) return null
+        const { username, password } = payload
+
         const persistedPassword = await useYDBSession(async (session) => {
           const { resultSets } = await session.executeQuery(`
             DECLARE $username AS Utf8;
 
             SELECT * FROM user WHERE username = $username LIMIT 1;
           `, {
-            "$username": TypedValues.utf8(credentials.username)
+            "$username": TypedValues.utf8(username)
           })
 
           return TypedData.createNativeObjects(resultSets[0])[0] as unknown as PersistedPassword
         })
 
-        if (!persistedPassword || !(await verifyPassword(persistedPassword, credentials.password))) return null
+        if (!persistedPassword || !(await verifyPassword(persistedPassword, password))) return null
 
         return { username: credentials.username }
       }
@@ -50,3 +55,13 @@ export default NuxtAuthHandler({
     signIn: '/login'
   }
 })
+
+function validateCredentials(credentials: Record<string, unknown>) {
+  const CredentialsSchema = z.object({
+    username: z.string(),
+    password: z.string()
+  })
+
+  if (!CredentialsSchema.safeParse(credentials).success) return null
+  return credentials as z.infer<typeof CredentialsSchema>
+}
