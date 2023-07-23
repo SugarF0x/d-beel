@@ -10,6 +10,10 @@ useHead({
 const page = ref(1)
 const debouncedPageIndex = ref(page.value - 1)
 
+watch([page], () => {
+  scrollTo({ top: 0, behavior: "smooth" })
+})
+
 const postsMeta = useLocalStorage('hots-posts-meta', {
   totalPosts: 0,
   totalPages: 0
