@@ -118,8 +118,11 @@ const isLoading = computed(() => searchStatus.value === 'pending' || isFetching.
 
   column-gap: 20px;
 
-  & > div+div {
-    margin-top: 20px;
+  & > div {
+    &:not(:first-child) {
+      margin-top: 20px;
+    }
+
     break-inside: avoid;
   }
 }
