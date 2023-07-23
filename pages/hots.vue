@@ -8,20 +8,21 @@ useHead({
 const page = ref(1)
 watch([page], () => refresh())
 
-const { data, refresh, pending } = await useFetch('/api/hots/posts-page', { params: { page } })
+const { data: totalPosts } = await useFetch('/api/hots/total-posts')
+const { data: hotsPosts, refresh, pending } = await useFetch('/api/hots/posts-page', { params: { page } })
 </script>
 
 <template>
   <div class="wrapper">
     <v-img class="hero" src="/img/hots/hero.png" />
 
-    <v-pagination v-model="page" :length="12" total-visible="5" :disabled="pending" />
+    <v-pagination v-model="page" :length="totalPosts.totalPages" total-visible="5" :disabled="pending" />
 
     <v-container class="grid-container" :class="{ loading: pending }">
-      <hots-post v-for="(post, index) in data as HotsPostRow[]" :key="`${post.username}-${index}`" v-bind="post" />
+      <hots-post v-for="(post, index) in hotsPosts as HotsPostRow[]" :key="`${post.username}-${index}`" v-bind="post" />
     </v-container>
 
-    <v-pagination v-model="page" :length="12" total-visible="5" :disabled="pending" />
+    <v-pagination v-model="page" :length="totalPosts.totalPages" total-visible="5" :disabled="pending" />
   </div>
 </template>
 
