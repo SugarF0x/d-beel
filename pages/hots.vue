@@ -23,7 +23,7 @@ const postsMeta = useLocalStorage('hots-posts-meta', {
 
 const posts = useLocalStorage<HotsPostRow[][]>('hots-posts', [])
 
-const { pending, execute: fetchPosts } = useAsyncData('hots-posts', async () => {
+const { pending: isFetching, execute: fetchPosts } = useAsyncData('hots-posts', async () => {
   const index = page.value - 1
 
   await (async () => {
@@ -49,6 +49,15 @@ await useAsyncData('hots-posts-meta', async () => {
 
   postsMeta.value = meta
 })
+
+const searchValue = ref('')
+watch(searchValue, (value) => {
+  if (!value) searchResults.value = null
+})
+
+const { data: searchResults, status: searchStatus, execute: search } = useAsyncData('hots-username-search', async () => await $fetch('/api/hots/search', { params: { username: searchValue.value } }), { immediate: false })
+
+const isLoading = computed(() => searchStatus.value === 'pending' || isFetching.value)
 </script>
 
 <template>
@@ -56,20 +65,20 @@ await useAsyncData('hots-posts-meta', async () => {
     <v-img class="hero" src="/img/hots/hero.png" />
 
     <v-container class="controls-container">
-      <v-pagination v-model="page" :length="postsMeta.totalPages" :total-visible="Math.min(postsMeta.totalPages, 5)" :disabled="pending" />
-      <v-text-field hide-details label="Имя дебила" />
+      <v-pagination v-model="page" :length="postsMeta.totalPages" :total-visible="Math.min(postsMeta.totalPages, 5)" :disabled="isLoading" />
+      <v-text-field v-model="searchValue" hide-details label="Имя дебила" @keyup.enter="() => searchValue.length && search()" />
 
       <div class="action">
-        <v-btn color="primary">Поиск</v-btn>
+        <v-btn color="primary" :disabled="!searchValue.length" @click="search">Поиск</v-btn>
         <v-btn color="secondary" :disabled="!isAuthed">Создать</v-btn>
       </div>
     </v-container>
 
-    <v-container class="grid-container" :class="{ loading: pending }">
-      <hots-post v-for="(post, index) in posts[debouncedPageIndex]" :key="`${post.username}-${index}`" v-bind="post" />
+    <v-container class="grid-container" :class="{ loading: isLoading }">
+      <hots-post v-for="(post, index) in searchResults ?? posts[debouncedPageIndex]" :key="`${post.username}-${index}`" v-bind="post" />
     </v-container>
 
-    <v-pagination v-model="page" :length="postsMeta.totalPages" :total-visible="Math.min(postsMeta.totalPages, 5)" :disabled="pending" />
+    <v-pagination v-model="page" :length="postsMeta.totalPages" :total-visible="Math.min(postsMeta.totalPages, 5)" :disabled="isLoading" />
   </div>
 </template>
 
