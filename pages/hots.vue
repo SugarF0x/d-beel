@@ -7,6 +7,8 @@ useHead({
   title: 'Дебилы Шторма'
 })
 
+const { data: isAuthed } = useAuth()
+
 const page = ref(1)
 const debouncedPageIndex = ref(page.value - 1)
 
@@ -55,9 +57,12 @@ await useAsyncData('hots-posts-meta', async () => {
 
     <v-container class="controls-container">
       <v-pagination v-model="page" :length="postsMeta.totalPages" :total-visible="Math.min(postsMeta.totalPages, 5)" :disabled="pending" />
-      <v-text-field />
-      <v-btn>Поиск</v-btn>
-      <v-btn>Создать</v-btn>
+      <v-text-field hide-details label="Имя дебила" />
+
+      <div class="action">
+        <v-btn color="primary">Поиск</v-btn>
+        <v-btn color="secondary" :disabled="!isAuthed">Создать</v-btn>
+      </div>
     </v-container>
 
     <v-container class="grid-container" :class="{ loading: pending }">
@@ -78,6 +83,13 @@ await useAsyncData('hots-posts-meta', async () => {
 .controls-container {
   display: flex;
   gap: 8px;
+  align-items: center;
+
+  .action {
+    display: flex;
+    margin-left: 8px;
+    gap: 8px;
+  }
 }
 
 .loading {
