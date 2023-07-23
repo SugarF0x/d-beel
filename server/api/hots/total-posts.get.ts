@@ -9,6 +9,7 @@ export default defineEventHandler(async () => {
     const totalPosts = TypedData.createNativeObjects(resultSets[0])[0].count as number
     const totalPages = Math.ceil(totalPosts / HOTS_POSTS_PER_PAGE)
 
+    // TODO: return just total posts, reuse exported const on client side too
     return {
       totalPosts,
       totalPages,
