@@ -20,6 +20,8 @@ const { data, refresh, pending } = await useFetch('/api/hots/posts-page', { para
     <v-container class="grid-container" :class="{ loading: pending }">
       <hots-post v-for="(post, index) in data as HotsPostRow[]" :key="`${post.username}-${index}`" v-bind="post" />
     </v-container>
+
+    <v-pagination v-model="page" :length="12" total-visible="5" :disabled="pending" />
   </div>
 </template>
 
@@ -27,6 +29,7 @@ const { data, refresh, pending } = await useFetch('/api/hots/posts-page', { para
 .wrapper {
   flex: 1;
   background: url('/img/hots/background.jpg') center fixed;
+  padding-bottom: 24px;
 }
 
 .loading {
