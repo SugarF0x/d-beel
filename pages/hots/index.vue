@@ -2,8 +2,6 @@
 definePageMeta({ layout: 'hots' })
 useHead({ title: 'Дебилы Шторма' })
 
-const { data: isAuthed } = useAuth()
-
 const searchValue = ref('')
 
 const page = ref(1)
@@ -45,7 +43,7 @@ const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.valu
       </v-col>
       <v-col cols="12" sm="5" md="4" lg="3" class="action">
         <v-btn color="primary" @click="execute">Поиск</v-btn>
-        <v-btn color="secondary" :disabled="!isAuthed">Создать</v-btn>
+        <v-btn color="secondary" @click="navigateTo('/hots/create')">Создать</v-btn>
       </v-col>
     </v-row>
   </v-container>
