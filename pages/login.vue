@@ -1,13 +1,8 @@
 <script setup lang="ts">
-definePageMeta({
-  auth: {
-    unauthenticatedOnly: true,
-    navigateAuthenticatedTo: '/'
-  }
-})
-
-const { signIn } = useAuth()
+const { data, signIn } = useAuth()
 const route = useRoute()
+
+if (data.value) await navigateTo('/')
 
 const callbackUrl = computed(() => {
   const callbackUrlParam = route.query.callbackUrl
@@ -33,8 +28,8 @@ async function login() {
     if (!signInResult) throw new Error('Uhoh, something went wrong')
     const { error, url } = signInResult
 
-    if (error) return errorMessage.value = 'Неправильный логин или пароль'
-    else return navigateTo(url, { external: true })
+    if (error) errorMessage.value = 'Неправильный логин или пароль'
+    else navigateTo(url, { external: true })
   })
 }
 

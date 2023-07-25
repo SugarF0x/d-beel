@@ -24,9 +24,6 @@ export default defineNuxtConfig({
     provider: {
       addDefaultCallbackUrl: true,
       type: 'authjs'
-    },
-    globalAppMiddleware: {
-      isEnabled: false
     }
   },
   vuetify: {
