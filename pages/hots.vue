@@ -1,7 +1,6 @@
 <script setup lang="ts">
-useHead({
-  title: 'Дебилы Шторма'
-})
+definePageMeta({ layout: 'hots' })
+useHead({ title: 'Дебилы Шторма' })
 
 const { data: isAuthed } = useAuth()
 
@@ -36,39 +35,29 @@ const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.valu
 </script>
 
 <template>
-  <div class="wrapper">
-    <v-img class="hero" src="/img/hots/hero.png" />
+  <v-container>
+    <v-row>
+      <v-col cols="12" md="12" lg="4">
+        <v-pagination v-model="page" :length="totalPages" :disabled="pending" :total-visible="Math.min(totalPages, 5)" density="comfortable" />
+      </v-col>
+      <v-col cols="12" sm="7" md="8" lg="5">
+        <v-text-field v-model="searchValue" hide-details label="Имя дебила" @keyup.enter="execute" />
+      </v-col>
+      <v-col cols="12" sm="5" md="4" lg="3" class="action">
+        <v-btn color="primary" @click="execute">Поиск</v-btn>
+        <v-btn color="secondary" :disabled="!isAuthed">Создать</v-btn>
+      </v-col>
+    </v-row>
+  </v-container>
 
-    <v-container>
-      <v-row>
-        <v-col cols="12" md="12" lg="4">
-          <v-pagination v-model="page" :length="totalPages" :disabled="pending" :total-visible="Math.min(totalPages, 5)" density="comfortable" />
-        </v-col>
-        <v-col cols="12" sm="7" md="8" lg="5">
-          <v-text-field v-model="searchValue" hide-details label="Имя дебила" @keyup.enter="execute" />
-        </v-col>
-        <v-col cols="12" sm="5" md="4" lg="3" class="action">
-          <v-btn color="primary" @click="execute">Поиск</v-btn>
-          <v-btn color="secondary" :disabled="!isAuthed">Создать</v-btn>
-        </v-col>
-      </v-row>
-    </v-container>
+  <v-container class="grid-container" :class="{ loading: pending }">
+    <hots-post v-for="(post, index) in data?.posts ?? []" :key="`${post.username}-${index}`" v-bind="post" />
+  </v-container>
 
-    <v-container class="grid-container" :class="{ loading: pending }">
-      <hots-post v-for="(post, index) in data?.posts ?? []" :key="`${post.username}-${index}`" v-bind="post" />
-    </v-container>
-
-    <v-pagination v-model="page" :length="totalPages" :disabled="pending" density="comfortable" />
-  </div>
+  <v-pagination v-model="page" :length="totalPages" :disabled="pending" density="comfortable" />
 </template>
 
 <style scoped lang="scss">
-.wrapper {
-  flex: 1;
-  background: url('/img/hots/background.jpg') center fixed;
-  padding-bottom: 24px;
-}
-
 .action {
   display: flex;
   justify-content: center;
@@ -100,11 +89,5 @@ const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.valu
 
     break-inside: avoid;
   }
-}
-
-.hero {
-  margin: 0 auto;
-  aspect-ratio: 800 / 350;
-  max-width: 800px;
 }
 </style>
