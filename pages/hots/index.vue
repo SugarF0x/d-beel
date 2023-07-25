@@ -26,33 +26,54 @@ const { data, pending, execute } = useAsyncData('hots-posts', async () => {
   return results
 }, {
   lazy: true,
+  immediate: false,
   watch: [page]
 })
+
+;(() => {
+  /**
+   * this is a hacky fix to layout suspense child double render
+   * issue is within vue router and has been open for 2 years
+   * :(
+   */
+
+  const didUnmount = ref(false)
+  onUnmounted(() => { didUnmount.value = true })
+
+  onMounted(() => {
+    nextTick(() => {
+      if (!didUnmount.value) execute()
+    })
+  })
+})()
+
 
 const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.value.totalPosts / data.value.posts.length)) ?? 0))
 </script>
 
 <template>
-  <v-container>
-    <v-row>
-      <v-col cols="12" md="12" lg="4">
-        <v-pagination v-model="page" :length="totalPages" :disabled="pending" :total-visible="Math.min(totalPages, 5)" density="comfortable" />
-      </v-col>
-      <v-col cols="12" sm="7" md="8" lg="5">
-        <v-text-field v-model="searchValue" hide-details label="Имя дебила" @keyup.enter="execute" />
-      </v-col>
-      <v-col cols="12" sm="5" md="4" lg="3" class="action">
-        <v-btn color="primary" @click="execute">Поиск</v-btn>
-        <v-btn color="secondary" @click="navigateTo('/hots/create')">Создать</v-btn>
-      </v-col>
-    </v-row>
-  </v-container>
+  <div>
+    <v-container>
+      <v-row>
+        <v-col cols="12" md="12" lg="4">
+          <v-pagination v-model="page" :length="totalPages" :disabled="pending" :total-visible="Math.min(totalPages, 5)" density="comfortable" />
+        </v-col>
+        <v-col cols="12" sm="7" md="8" lg="5">
+          <v-text-field v-model="searchValue" hide-details label="Имя дебила" @keyup.enter="execute" />
+        </v-col>
+        <v-col cols="12" sm="5" md="4" lg="3" class="action">
+          <v-btn color="primary" @click="execute">Поиск</v-btn>
+          <v-btn color="secondary" @click="navigateTo('/hots/create')">Создать</v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
 
-  <v-container class="grid-container" :class="{ loading: pending }">
-    <hots-post v-for="(post, index) in data?.posts ?? []" :key="`${post.username}-${index}`" v-bind="post" />
-  </v-container>
+    <v-container class="grid-container" :class="{ loading: pending }">
+      <hots-post v-for="(post, index) in data?.posts ?? []" :key="`${post.username}-${index}`" v-bind="post" />
+    </v-container>
 
-  <v-pagination v-model="page" :length="totalPages" :disabled="pending" density="comfortable" />
+    <v-pagination v-model="page" :length="totalPages" :disabled="pending" density="comfortable" />
+  </div>
 </template>
 
 <style scoped lang="scss">
