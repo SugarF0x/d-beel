@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import onSuspenseRerender from "~/hooks/onSuspenseRerender"
+
 definePageMeta({ layout: 'hots' })
 useHead({ title: 'Дебилы Шторма' })
 
@@ -30,23 +32,7 @@ const { data, pending, execute } = useAsyncData('hots-posts', async () => {
   watch: [page]
 })
 
-;(() => {
-  /**
-   * this is a hacky fix to layout suspense child double render
-   * issue is within vue router and has been open for 2 years
-   * :(
-   */
-
-  const didUnmount = ref(false)
-  onUnmounted(() => { didUnmount.value = true })
-
-  onMounted(() => {
-    nextTick(() => {
-      if (!didUnmount.value) execute()
-    })
-  })
-})()
-
+onSuspenseRerender(execute)
 
 const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.value.totalPosts / data.value.posts.length)) ?? 0))
 </script>
