@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
 
       SELECT hots_post.*, Count("hots_post.*") OVER() AS total_posts
       FROM hots_post
-      WHERE IF($username is not NULL, hots_post.username = $username, true)
+      WHERE IF($username is not NULL, Unicode::ToLower(hots_post.username) = Unicode::ToLower($username), true)
       ORDER BY created_at DESC
       LIMIT $offset, $limit;
     `, filterOptionalQueryParams({
