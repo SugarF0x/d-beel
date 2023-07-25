@@ -3,6 +3,15 @@ import { HotsPostRow } from "~/server/ydb/tables/hots_post"
 import { format } from 'date-fns'
 
 const { created_at, created_by, hero, rating, username, comment } = defineProps<HotsPostRow>()
+
+const colors = [
+  '#C17C62',
+  '#B2B8CE',
+  '#FAC627',
+  '#C1A0FF',
+  '#01BDEE',
+  '#D2FCFF'
+]
 </script>
 
 <template>
@@ -32,7 +41,7 @@ const { created_at, created_by, hero, rating, username, comment } = defineProps<
         {{ comment }}
       </p>
 
-      <v-rating class="rating" :readonly="true" :model-value="rating" />
+      <v-rating class="rating" :readonly="true" :model-value="rating" :color="colors[rating]" />
     </div>
   </div>
 </template>
