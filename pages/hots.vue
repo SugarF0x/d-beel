@@ -32,28 +32,33 @@ const { data, pending, execute } = useAsyncData('hots-posts', async () => {
   watch: [page]
 })
 
-const totalPages = computed(() => data.value ? Math.min(data.value.totalPosts / data.value.posts.length, 5) : 1)
+const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.value.totalPosts / data.value.posts.length)) ?? 0))
 </script>
 
 <template>
   <div class="wrapper">
     <v-img class="hero" src="/img/hots/hero.png" />
 
-    <v-container class="controls-container">
-      <v-pagination v-model="page" :length="totalPages" :total-visible="Math.min(totalPages, 5)" :disabled="pending" />
-      <v-text-field v-model="searchValue" hide-details label="Имя дебила" @keyup.enter="execute" />
-
-      <div class="action">
-        <v-btn color="primary" @click="execute">Поиск</v-btn>
-        <v-btn color="secondary" :disabled="!isAuthed">Создать</v-btn>
-      </div>
+    <v-container>
+      <v-row>
+        <v-col cols="12" md="12" lg="4">
+          <v-pagination v-model="page" :length="totalPages" :disabled="pending" :total-visible="Math.min(totalPages, 5)" density="comfortable" />
+        </v-col>
+        <v-col cols="12" sm="7" md="8" lg="5">
+          <v-text-field v-model="searchValue" hide-details label="Имя дебила" @keyup.enter="execute" />
+        </v-col>
+        <v-col cols="12" sm="5" md="4" lg="3" class="action">
+          <v-btn color="primary" @click="execute">Поиск</v-btn>
+          <v-btn color="secondary" :disabled="!isAuthed">Создать</v-btn>
+        </v-col>
+      </v-row>
     </v-container>
 
     <v-container class="grid-container" :class="{ loading: pending }">
       <hots-post v-for="(post, index) in data?.posts ?? []" :key="`${post.username}-${index}`" v-bind="post" />
     </v-container>
 
-    <v-pagination v-model="page" :length="totalPages" :total-visible="Math.min(totalPages, 5)" :disabled="pending" />
+    <v-pagination v-model="page" :length="totalPages" :disabled="pending" density="comfortable" />
   </div>
 </template>
 
@@ -64,16 +69,11 @@ const totalPages = computed(() => data.value ? Math.min(data.value.totalPosts / 
   padding-bottom: 24px;
 }
 
-.controls-container {
+.action {
   display: flex;
-  gap: 8px;
+  justify-content: center;
   align-items: center;
-
-  .action {
-    display: flex;
-    margin-left: 8px;
-    gap: 8px;
-  }
+  gap: 8px;
 }
 
 .loading {
@@ -83,7 +83,7 @@ const totalPages = computed(() => data.value ? Math.min(data.value.totalPosts / 
 .grid-container {
   columns: 1;
 
-  @media only screen and (min-width: 640px) {
+  @media only screen and (min-width: 600px) {
     columns: 2;
   }
 
