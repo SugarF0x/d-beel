@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Loading...</title>
+  <title>Загрузка...</title>
 
   <style>
     body, html {
@@ -16,11 +16,15 @@
       flex-direction: column;
     }
 
+    #loading-gif {
+      width: min(512px, 80vw);
+    }
+
     .indeterminate-progress-bar {
       background-color: #1e1e1e;
       border-radius: 9999px;
       height: 0.5rem;
-      width: 320px;
+      width: min(320px, 50vw);
       position: relative;
       overflow: hidden;
       margin: 0 auto;
@@ -49,7 +53,7 @@
   </style>
 </head>
 <body>
-  <img src="/pandemonica.gif" alt="loader" />
+  <img id="loading-gif" src="/pandemonica.gif" alt="loader" />
   <div class="indeterminate-progress-bar">
     <div class="indeterminate-progress-bar__progress"></div>
   </div>
