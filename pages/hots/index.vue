@@ -13,7 +13,7 @@ watch([page], () => {
   scrollTo({ top: 0, behavior: "smooth" })
 })
 
-const { data, pending, execute } = useAsyncData('hots-posts', async () => {
+const { data, pending, execute, status } = useAsyncData('hots-posts', async () => {
   const index = page.value - 1
 
   const results = await $fetch('/api/hots/posts-page', {
@@ -32,7 +32,7 @@ const { data, pending, execute } = useAsyncData('hots-posts', async () => {
   watch: [page]
 })
 
-onSuspenseRerender(execute)
+onSuspenseRerender(() => { status.value === "idle" && execute() })
 
 const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.value.totalPosts / data.value.posts.length)) ?? 0))
 </script>
