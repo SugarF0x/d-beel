@@ -5,13 +5,6 @@ export default defineNuxtConfig({
   typescript: {
     strict: true
   },
-  vite: {
-    vue: {
-      script: {
-        propsDestructure: true
-      }
-    }
-  },
   modules: [
     '@sidebase/nuxt-auth',
     '@invictus.codes/nuxt-vuetify',

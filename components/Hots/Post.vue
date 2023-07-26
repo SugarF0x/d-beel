@@ -2,7 +2,7 @@
 import { HotsPostRow } from "~/server/ydb/tables/hots_post"
 import { format } from 'date-fns'
 
-const { created_at, created_by, hero, rating, username, comment } = defineProps<HotsPostRow>()
+defineProps<HotsPostRow>()
 
 const colors = [
   '#C17C62',
