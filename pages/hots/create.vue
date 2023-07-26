@@ -9,9 +9,9 @@ const { data: authData } = useAuth()
 
 const tabIndex = ref(0)
 const tabItems = computed(() => [
-  { text: 'Герой' },
-  { text: 'Ревью' },
-  { text: 'Публикация', disabled: !Boolean(username.value && comment.value) },
+  { text: 'Герой', disabled: isLoading.value },
+  { text: 'Ревью', disabled: isLoading.value },
+  { text: 'Публикация', disabled: isLoading.value || !Boolean(username.value && comment.value) },
 ])
 
 const hero = ref<HotsHero | undefined>(undefined)
@@ -34,9 +34,25 @@ const username = ref('')
 const comment = ref('')
 const rating = ref(0)
 
-function publish() {
+const { status, execute: publish } = useAsyncData('hots-posts', async () => {
+  const result = await $fetch('/api/hots/publish', {
+    method: 'POST',
+    body: {
+      hero: hero.value,
+      username: username.value,
+      comment: comment.value,
+      rating: rating.value,
+    },
+    retry: false
+  })
 
-}
+  if (result) navigateTo('/hots', { external: true })
+}, {
+  lazy: true,
+  immediate: false
+})
+
+const isLoading = computed(() => status.value === 'pending')
 </script>
 
 <template>
@@ -73,7 +89,7 @@ function publish() {
           :created_by="authData?.user.username"
         />
 
-        <v-btn color="primary" @click="publish">Опубликовать</v-btn>
+        <v-btn color="primary" @click="publish" :disabled="isLoading">Опубликовать</v-btn>
       </v-container>
     </v-window-item>
   </v-window>
