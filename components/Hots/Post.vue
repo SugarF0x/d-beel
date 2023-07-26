@@ -1,17 +1,9 @@
 <script setup lang="ts">
 import { HotsPostRow } from "~/server/ydb/tables/hots_post"
 import { format } from 'date-fns'
+import { hotsRatingColors } from "~/const/hots/colors"
 
 defineProps<HotsPostRow>()
-
-const colors = [
-  '#C17C62',
-  '#B2B8CE',
-  '#FAC627',
-  '#C1A0FF',
-  '#01BDEE',
-  '#D2FCFF'
-]
 </script>
 
 <template>
@@ -41,7 +33,7 @@ const colors = [
         {{ comment }}
       </p>
 
-      <v-rating class="rating" :readonly="true" :model-value="rating" :color="colors[rating]" />
+      <v-rating class="rating" :readonly="true" :model-value="rating" :color="hotsRatingColors[rating]" />
     </div>
   </div>
 </template>
