@@ -11,7 +11,7 @@ const size = computed(() => props.size ?? 128)
 </script>
 
 <template>
-  <button class="hero-portrait" :class="{ active }" :style="`filter: greyscale(${Number(grey)})`" @click="emit('click', hero)">
+  <button class="hero-portrait" :class="{ active }" :style="{ filter: `grayscale(${Number(!!grey)})` }" @click="emit('click', hero)">
     <v-img :src="`/img/hots/heroes/portrait/${hero}.png`" class="portrait" />
     <span class="vingette" />
   </button>
