@@ -15,12 +15,8 @@ defineProps<HotsPostRow>()
         <h2>{{ username }}</h2>
         <table>
           <tr>
-            <th>Герой</th>
-            <td>{{ hero ?? "???" }}</td>
-          </tr>
-          <tr>
             <th>Автор</th>
-            <td>{{ created_by ?? "???" }}</td>
+            <td>{{ created_by ?? "легаси" }}</td>
           </tr>
           <tr>
             <th>Дата публикации</th>
