@@ -45,7 +45,7 @@ const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.valu
           <v-pagination v-model="page" :length="totalPages" :disabled="pending" :total-visible="Math.min(totalPages, 5)" density="comfortable" />
         </v-col>
         <v-col cols="12" sm="7" md="8" lg="5">
-          <v-text-field v-model="searchValue" hide-details label="Имя дебила" @keyup.enter="execute" />
+          <v-text-field v-model="searchValue" hide-details label="Имя дебила" @keyup.enter="execute" :loading="pending" :diabled="pending" />
         </v-col>
         <v-col cols="12" sm="5" md="4" lg="3" class="action">
           <v-btn color="primary" @click="execute">Поиск</v-btn>
