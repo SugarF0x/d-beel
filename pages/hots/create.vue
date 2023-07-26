@@ -5,6 +5,8 @@ import { hotsRatingColors } from "~/const/hots/colors"
 definePageMeta({ layout: 'hots', middleware: ['auth'] })
 useHead({ title: 'Новый дебил' })
 
+const { data: authData } = useAuth()
+
 const tabIndex = ref(0)
 const tabItems = computed(() => [
   { text: 'Герой' },
@@ -31,6 +33,10 @@ const roleToTitleMap: Record<HotsHeroRole, string> = {
 const username = ref('')
 const comment = ref('')
 const rating = ref(0)
+
+function publish() {
+
+}
 </script>
 
 <template>
@@ -57,8 +63,17 @@ const rating = ref(0)
     </v-window-item>
 
     <v-window-item :value="2">
-      <v-container>
+      <v-container class="hots-post-creation-container align-center">
+        <hots-post
+          :hero="hero ?? null"
+          :comment="comment"
+          :rating="rating"
+          :username="username"
+          :created_at="new Date().toISOString()"
+          :created_by="authData?.user.username"
+        />
 
+        <v-btn color="primary" @click="publish">Опубликовать</v-btn>
       </v-container>
     </v-window-item>
   </v-window>
