@@ -6,6 +6,8 @@ import saveRouteParams from "~/utils/router/saveRouteParams"
 definePageMeta({ layout: 'hots' })
 useHead({ title: 'Дебилы Шторма' })
 
+const POSTS_PER_PAGE = 12
+
 const params = useUrlSearchParams<{ page: string, username: string }>('history', {
   removeFalsyValues: true,
   initialValue: {
@@ -32,6 +34,7 @@ const { data, pending, execute, status } = useAsyncData('hots-posts', async () =
   const results = await $fetch('/api/hots/posts-page', {
     params: {
       page: page.value,
+      postsPerPage: POSTS_PER_PAGE,
       username: searchValue.value || undefined
     },
     retry: false
@@ -52,7 +55,7 @@ function search() {
 
 onSuspenseRerender(() => { status.value === "idle" && execute() })
 
-const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.value.totalPosts / data.value.posts.length)) ?? 0))
+const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.value.totalPosts / POSTS_PER_PAGE)) ?? 0))
 </script>
 
 <template>
