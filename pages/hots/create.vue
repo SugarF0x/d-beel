@@ -1,27 +1,69 @@
 <script setup lang="ts">
-import { HotsHero } from "~/server/ydb/types/hots/heroes"
+import { HotsHero, HotsHeroRole } from "~/server/ydb/types/hots/heroes"
 
 definePageMeta({ layout: 'hots', middleware: ['auth'] })
 useHead({ title: 'Новый дебил' })
 
-const selected = reactive(new Set())
+const tabTitles = ['Герой', 'Ревью', 'Публикация']
+const tabIndex = ref(0)
 
-function select(hero: HotsHero) {
-  if (selected.has(hero)) selected.delete(hero)
-  else selected.add(hero)
+const hero = ref<HotsHero | undefined>(undefined)
+
+function select(value: HotsHero) {
+  if (hero.value === value) hero.value = undefined
+  else hero.value = value
+}
+
+const roleToTitleMap: Record<HotsHeroRole, string> = {
+  [HotsHeroRole.Tank]: 'Танк',
+  [HotsHeroRole.Bruiser]: 'Брузер',
+  [HotsHeroRole.RangedAssasin]: 'Ренжевик',
+  [HotsHeroRole.MeleeAssasin]: 'Милишник',
+  [HotsHeroRole.Healer]: 'Хил',
+  [HotsHeroRole.Support]: 'Саппорт',
 }
 </script>
 
 <template>
-  <div style="flex: 1; display: flex; justify-content: center; align-items: center; gap: 24px;">
-    <hots-portrait :hero="HotsHero.Yrel" @click="select" :active="selected.has(HotsHero.Yrel)" />
-    <hots-portrait :hero="HotsHero.Auriel" @click="select" :active="selected.has(HotsHero.Auriel)" />
-    <hots-portrait :hero="HotsHero.Brightwing" @click="select" :active="selected.has(HotsHero.Brightwing)" />
-    <hots-portrait :hero="HotsHero.Whitemane" @click="select" :active="selected.has(HotsHero.Whitemane)" />
-    <hots-portrait :hero="HotsHero.Tyrande" @click="select" :active="selected.has(HotsHero.Tyrande)" />
-  </div>
+  <v-tabs v-model="tabIndex" color="cyan" align-tabs="center">
+    <v-tab v-for="(title, index) of tabTitles" :value="index">{{ title }}</v-tab>
+  </v-tabs>
+  <v-window v-model="tabIndex">
+    <v-window-item :value="0">
+      <v-container>
+        <v-container class="hots-post-create-page">
+          <div v-for="role in HotsHeroRole" :key="role" class="hero-selection-section">
+            <h2>{{ roleToTitleMap[role] }}</h2>
+            <hots-hero-selector :role="role" :selected="hero" @select="select" />
+          </div>
+        </v-container>
+      </v-container>
+    </v-window-item>
+
+    <v-window-item :value="1">
+      <v-container>
+
+      </v-container>
+    </v-window-item>
+
+    <v-window-item :value="2">
+      <v-container>
+
+      </v-container>
+    </v-window-item>
+  </v-window>
 </template>
 
 <style scoped lang="scss">
+.hots-post-create-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 
+.hero-selection-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 </style>
