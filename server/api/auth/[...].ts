@@ -57,8 +57,8 @@ export default NuxtAuthHandler({
 
 function validateCredentials(credentials: Record<string, unknown>) {
   const CredentialsSchema = z.object({
-    username: z.string(),
-    password: z.string()
+    username: z.string().min(1),
+    password: z.string().min(1),
   })
 
   if (!CredentialsSchema.safeParse(credentials).success) return null
