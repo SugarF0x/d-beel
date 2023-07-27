@@ -16,7 +16,7 @@ async function doesUserAlreadyExist(username: string): Promise<boolean> {
     const { resultSets } = await session.executeQuery(`
       DECLARE $username AS Utf8;
       
-      SELECT COUNT($username) as count FROM user WHERE username = $username LIMIT 1;
+      SELECT COUNT(username) as count FROM user WHERE username = $username LIMIT 1;
     `, {
       "$username": TypedValues.utf8(username)
     })
