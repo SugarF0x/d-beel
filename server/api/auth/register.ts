@@ -2,7 +2,10 @@ import { TypedData, TypedValues } from "ydb-sdk"
 import { z } from 'zod'
 
 export default defineEventHandler(async (event) => {
-  const { username, password } = await getBodyPayload(event, z.object({ username: z.string(), password: z.string() }))
+  const { username, password } = await getBodyPayload(event, z.object({
+    username: z.string().min(1),
+    password: z.string().min(1),
+  }))
 
   if (await doesUserAlreadyExist(username)) throw createError({ statusCode: 409 })
 
