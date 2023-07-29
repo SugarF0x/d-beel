@@ -20,9 +20,6 @@ let data = (() => {
       if (cells.length < 3) return null
       const [imageCell, nameCell, shortcutsCell] = cells
 
-      // TODO: sometimes images are base64 encoded
-      // TODO: sometimes shortcuts are incorrectly split
-
       return {
         image: imageCell.querySelector('img').src,
         name: nameCell.innerText.replaceAll('\n', ''),
