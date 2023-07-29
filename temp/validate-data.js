@@ -15,15 +15,10 @@ for (const { packName, entries } of data) {
 
   for (const { image, name, shortcuts } of entries) {
     if (imageSources.has(image)) throw new Error(`Duplicate image source: ${image}`)
-    imageSources.add(packName)
+    imageSources.add(image)
+    emojiNames.add(name)
 
-    if (emojiNames.has(name)) throw new Error(`Duplicate emoji name: ${name}`)
-    emojiNames.add(packName)
-
-    for (const shortcut of shortcuts) {
-      if (shortcutSet.has(shortcut)) throw new Error(`Duplicate emoji shortcut: ${shortcut}`)
-      shortcutSet.add(packName)
-    }
+    for (const shortcut of shortcuts) shortcutSet.add(shortcut)
   }
 }
 
