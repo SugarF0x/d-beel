@@ -1,5 +1,7 @@
 // Scrapper from: https://heroesofthestorm.fandom.com/wiki/Emoji
 
+Array.from(document.querySelectorAll('.mw-collapsible-toggle-collapsed')).forEach(e => e.click())
+
 let data = (() => {
   const tables = Array.from(document.querySelectorAll('.mw-parser-output table'))
   tables.pop()
@@ -23,7 +25,7 @@ let data = (() => {
 
       return {
         image: imageCell.querySelector('img').src,
-        name: nameCell.innerText,
+        name: nameCell.innerText.replaceAll('\n', ''),
         shortcuts: shortcutsCell.innerText.split('\n'),
       }
     }).filter(Boolean)
@@ -36,7 +38,7 @@ let data = (() => {
 })
 
 let downloaderElement = document.createElement('a')
-downloaderElement.href = 'data:attachment/text,' + encodeURI(data);
+downloaderElement.href = 'data:attachment/text,' + encodeURI(JSON.stringify(data, null, 2));
 downloaderElement.target = '_blank';
 downloaderElement.download = 'hots-emoji-dataset.json';
 downloaderElement.click();
