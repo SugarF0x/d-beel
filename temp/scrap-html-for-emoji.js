@@ -23,7 +23,7 @@ let data = (() => {
       const image = imageCell.querySelector('img').src
       const name = nameCell.innerText.replaceAll('\n', '')
       const shortcuts = shortcutsCell.innerText.split('\n')
-      const fileName = name.toLowerCase().replaceAll(' ', '-') + (image.includes('png') ? '.png' : '.gif')
+      const fileName = sanitizeName(name) + (image.includes('png') ? '.png' : '.gif')
 
       return {
         image,
@@ -34,11 +34,21 @@ let data = (() => {
     }).filter(Boolean)
 
     return {
-      packName,
+      packName: sanitizeName(packName),
       entries
     }
   })
 })
+
+function sanitizeName(value) {
+  return value
+    .toLowerCase()
+    .replaceAll(/['".!?]/g, '')
+    .replaceAll(/ú/g, 'u')
+    .replaceAll(' ', '-')
+    .replaceAll(',-', '-')
+    .replaceAll(',', '-')
+}
 
 let downloaderElement = document.createElement('a')
 downloaderElement.href = 'data:attachment/text,' + encodeURI(JSON.stringify(data, null, 2));
