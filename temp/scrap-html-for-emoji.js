@@ -20,10 +20,16 @@ let data = (() => {
       if (cells.length < 3) return null
       const [imageCell, nameCell, shortcutsCell] = cells
 
+      const image = imageCell.querySelector('img').src
+      const name = nameCell.innerText.replaceAll('\n', '')
+      const shortcuts = shortcutsCell.innerText.split('\n')
+      const fileName = name.toLowerCase().replaceAll(' ', '-') + (image.includes('png') ? '.png' : '.gif')
+
       return {
-        image: imageCell.querySelector('img').src,
-        name: nameCell.innerText.replaceAll('\n', ''),
-        shortcuts: shortcutsCell.innerText.split('\n'),
+        image,
+        name,
+        fileName,
+        shortcuts,
       }
     }).filter(Boolean)
 
