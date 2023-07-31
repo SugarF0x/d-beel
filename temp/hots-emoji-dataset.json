@@ -7809,8 +7809,7 @@
         "shortcuts": [
           ":anduinlove:",
           ":anduininlove:",
-          ":andulove:",
-          ":anduinlove:"
+          ":andulove:"
         ],
         "fileName": "anduin-in-love.png"
       },
@@ -7934,116 +7933,6 @@
           ":arthsurprised:"
         ],
         "fileName": "arthas-surprised.png"
-      }
-    ]
-  },
-  {
-    "packName": "brightwing-pack-1",
-    "entries": [
-      {
-        "image": "https://static.wikia.nocookie.net/allstars_gamepedia/images/4/4d/Emoji_Brightwing_Pack_1_Brightwing_Happy.png/revision/latest?cb=20170530012855",
-        "name": "Brightwing Happy",
-        "shortcuts": [
-          ":brightwinghappy:",
-          ":bwhappy:"
-        ],
-        "fileName": "brightwing-happy.png"
-      },
-      {
-        "image": "https://static.wikia.nocookie.net/allstars_gamepedia/images/c/cf/Emoji_Brightwing_Pack_1_Brightwing_ROFL.png/revision/latest?cb=20170530012858",
-        "name": "Brightwing ROFL",
-        "shortcuts": [
-          ":brightwinglol:",
-          ":brightwingrofl:",
-          ":bwlol:",
-          ":bwrofl:"
-        ],
-        "fileName": "brightwing-rofl.png"
-      },
-      {
-        "image": "https://static.wikia.nocookie.net/allstars_gamepedia/images/b/bd/Emoji_Brightwing_Pack_1_Brightwing_Sad.png/revision/latest?cb=20170530012900",
-        "name": "Brightwing Sad",
-        "shortcuts": [
-          ":brightwingsad:",
-          ":bwsad:"
-        ],
-        "fileName": "brightwing-sad.png"
-      },
-      {
-        "image": "https://static.wikia.nocookie.net/allstars_gamepedia/images/0/04/Emoji_Brightwing_Pack_1_Brightwing_Silly.png/revision/latest?cb=20170530012903",
-        "name": "Brightwing Silly",
-        "shortcuts": [
-          ":brightwingsilly:",
-          ":bwsilly:"
-        ],
-        "fileName": "brightwing-silly.png"
-      },
-      {
-        "image": "https://static.wikia.nocookie.net/allstars_gamepedia/images/d/d4/Emoji_Brightwing_Pack_1_Brightwing_Meh.png/revision/latest?cb=20170530012906",
-        "name": "Brightwing Speechless",
-        "shortcuts": [
-          ":brightwingmeh:",
-          ":brightwingspeechless:",
-          ":bwmeh:",
-          ":bwspeechless:"
-        ],
-        "fileName": "brightwing-speechless.png"
-      }
-    ]
-  },
-  {
-    "packName": "brightwing-pack-2",
-    "entries": [
-      {
-        "image": "https://static.wikia.nocookie.net/allstars_gamepedia/images/6/6d/Emoji_Brightwing_Pack_2_Brightwing_Angry.png/revision/latest?cb=20170530012928",
-        "name": "Brightwing Angry",
-        "shortcuts": [
-          ":brightwingangry:",
-          ":bwangry:"
-        ],
-        "fileName": "brightwing-angry.png"
-      },
-      {
-        "image": "https://static.wikia.nocookie.net/allstars_gamepedia/images/1/14/Emoji_Brightwing_Pack_2_Brightwing_Cool.png/revision/latest?cb=20170530012931",
-        "name": "Brightwing Cool",
-        "shortcuts": [
-          ":brightwingcool:",
-          ":bwcool:"
-        ],
-        "fileName": "brightwing-cool.png"
-      },
-      {
-        "image": "https://static.wikia.nocookie.net/allstars_gamepedia/images/9/97/Emoji_Brightwing_Pack_2_Brightwing_Oops.png/revision/latest?cb=20170530012934",
-        "name": "Brightwing Embarrassed",
-        "shortcuts": [
-          ":brightwingoops:",
-          ":brightwingembarrassed:",
-          ":bwoops:",
-          ":bwembarrassed:"
-        ],
-        "fileName": "brightwing-embarrassed.png"
-      },
-      {
-        "image": "https://static.wikia.nocookie.net/allstars_gamepedia/images/2/2e/Emoji_Brightwing_Pack_2_Brightwing_Love.png/revision/latest?cb=20170530012937",
-        "name": "Brightwing in Love",
-        "shortcuts": [
-          ":brightwinglove:",
-          ":brightwinginlove:",
-          ":bwlove:",
-          ":bwinlove:"
-        ],
-        "fileName": "brightwing-in-love.png"
-      },
-      {
-        "image": "https://static.wikia.nocookie.net/allstars_gamepedia/images/5/59/Emoji_Brightwing_Pack_2_Brightwing_Surprised.png/revision/latest?cb=20170530012939",
-        "name": "Brightwing Surprised",
-        "shortcuts": [
-          ":brightwingwow:",
-          ":brightwingsurprised:",
-          ":bwwow:",
-          ":bwsurprised:"
-        ],
-        "fileName": "brightwing-surprised.png"
       }
     ]
   },
