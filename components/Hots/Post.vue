@@ -2,8 +2,11 @@
 import { format } from 'date-fns'
 import { hotsRatingColors } from "~/const/hots/colors"
 import type { HotsPost } from "~/server/api/hots/index.get"
+import { emojiShortcutToImageUrlMap } from "~/const/hots/emojiShortcutToImageUrlMap"
 
 defineProps<HotsPost>()
+
+const { data: authData } = useAuth()
 </script>
 
 <template>
@@ -30,6 +33,13 @@ defineProps<HotsPost>()
       </p>
 
       <v-rating class="rating" :readonly="true" :model-value="rating" :color="hotsRatingColors[rating]" />
+
+      <div v-if="reactions" class="reactions">
+        <div v-for="[shortcut, authors] of Object.entries(reactions)" class="reaction" :class="{ authored: authors.includes(authData?.user.username) }">
+          <v-img :src="emojiShortcutToImageUrlMap[shortcut]" />
+          {{ authors.length }}
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -39,6 +49,28 @@ defineProps<HotsPost>()
   box-shadow: 0 0 15px 6px rgba(0,0,0,.4);
   border: 1px solid rgba(153,204,255,.2);
   background-color: #0a1133;
+  position: relative;
+}
+
+.reactions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin: 0 8px 8px 8px;
+}
+
+.reaction {
+  border-radius: 48px;
+  background-color: rgba(153,204,255,.2);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px;
+  border: 1px solid transparent;
+
+  &.authored {
+    border: 1px solid #D2FCFF;
+  }
 }
 
 .container {
