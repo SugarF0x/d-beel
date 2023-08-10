@@ -4,6 +4,15 @@ import { TypedData, TypedValues } from "ydb-sdk"
 import stringToNumber from "~/utils/zod/stringToNumber"
 import { omit } from "lodash-es"
 
+export interface HotsPost extends HotsPostRow {
+  reactions?: Record<string, string[]>
+}
+
+export interface HotsPostGetResponse {
+  totalPosts: number
+  posts: HotsPost[]
+}
+
 export default defineEventHandler(async (event) => {
   const { page, postsPerPage, username } = getQueryPayload(event, z.object({
     page: z.string().transform(stringToNumber),
@@ -13,7 +22,7 @@ export default defineEventHandler(async (event) => {
 
   const offset = (page - 1) * postsPerPage
 
-  return await useYDBSession(async (session) => {
+  return await useYDBSession(async (session): Promise<HotsPostGetResponse> => {
     const { resultSets } = await session.executeQuery(`
       DECLARE $offset AS Uint16;
       DECLARE $limit AS Uint16;
@@ -34,6 +43,8 @@ export default defineEventHandler(async (event) => {
 
     const totalPosts = results[0]?.total_posts ?? 0
     const posts = results.map<HotsPostRow>(result => omit(result, 'total_posts'))
+
+    // TODO: fetch reactions for given posts
 
     return {
       totalPosts,

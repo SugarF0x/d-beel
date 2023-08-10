@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { HotsPostRow } from "~/server/ydb/tables/hots_post"
 import { format } from 'date-fns'
 import { hotsRatingColors } from "~/const/hots/colors"
+import type { HotsPost } from "~/server/api/hots/index.get"
 
-defineProps<HotsPostRow>()
+defineProps<HotsPost>()
 </script>
 
 <template>
