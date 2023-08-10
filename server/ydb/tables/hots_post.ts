@@ -9,7 +9,6 @@ CREATE TABLE hots_post
     created_by Utf8,
     hero Utf8,
     rating Uint8,
-    reactions Utf8
     PRIMARY KEY (username, created_at)
 );
 `
@@ -20,6 +19,5 @@ export interface HotsPostRow {
   created_by: string | null
   hero: HotsHero | null
   rating: number
-  reactions: Record<string, string[]> | null
   username: string
 }
