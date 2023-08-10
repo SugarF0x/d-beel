@@ -9,6 +9,7 @@ CREATE TABLE hots_post
     created_by Utf8,
     hero Utf8,
     rating Uint8,
+    reactions Utf8
     PRIMARY KEY (username, created_at)
 );
 `
