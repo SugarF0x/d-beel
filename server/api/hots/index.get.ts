@@ -1,8 +1,9 @@
 import { z } from "zod"
 import { HotsPostRow } from "~/server/ydb/tables/hots_post"
-import { TypedData, TypedValues } from "ydb-sdk"
+import { TypedData, TypedValues, Types } from "ydb-sdk"
 import stringToNumber from "~/utils/zod/stringToNumber"
 import { omit } from "lodash-es"
+import { HotsPostReactionRow } from "~/server/ydb/tables/hots_post_reaction"
 
 export interface HotsPost extends HotsPostRow {
   reactions?: Record<string, string[]>
@@ -23,7 +24,7 @@ export default defineEventHandler(async (event) => {
   const offset = (page - 1) * postsPerPage
 
   return await useYDBSession(async (session): Promise<HotsPostGetResponse> => {
-    const { resultSets } = await session.executeQuery(`
+    const { resultSets: postsResultSets } = await session.executeQuery(`
       DECLARE $offset AS Uint16;
       DECLARE $limit AS Uint16;
       DECLARE $username AS Utf8?;
@@ -39,12 +40,34 @@ export default defineEventHandler(async (event) => {
       "$username": username && TypedValues.optional(TypedValues.utf8(username))
     }))
 
-    const results = TypedData.createNativeObjects(resultSets[0]) as unknown as Array<HotsPostRow & { total_posts: number }>
+    const results = TypedData.createNativeObjects(postsResultSets[0]) as unknown as Array<HotsPostRow & { total_posts: number }>
 
     const totalPosts = results[0]?.total_posts ?? 0
     const posts = results.map<HotsPostRow>(result => omit(result, 'total_posts'))
 
-    // TODO: fetch reactions for given posts
+    const { resultSets: reactionsResultSets } = await session.executeQuery(`
+      DECLARE $keys AS List<Tuple<Utf8, Datetime>>;
+
+      SELECT * FROM hots_post_reaction
+      WHERE AsTuple(post_username, post_created_at) IN $keys;
+    `, filterOptionalQueryParams({
+      "$keys": TypedValues.list(
+        Types.tuple(Types.UTF8, Types.DATETIME),
+        posts.map(post => [post.username, post.created_at])
+      )
+    }))
+
+    const reactions = TypedData.createNativeObjects(reactionsResultSets[0]) as unknown as Array<HotsPostReactionRow>
+
+    const keyToPostMap: Record<string, HotsPost> = Object.fromEntries(posts.map(post => [`${post.username}-${post.created_at.valueOf()}`, post]))
+
+    for (const reaction of reactions) {
+      const key = `${reaction.post_username}-${reaction.post_created_at.valueOf()}`
+      const post = keyToPostMap[key]
+      post.reactions ??= {}
+      post.reactions[reaction.created_by] ??= []
+      post.reactions[reaction.created_by].push(reaction.shortcut)
+    }
 
     return {
       totalPosts,
