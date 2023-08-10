@@ -31,7 +31,7 @@ const { data, pending, execute, status } = useAsyncData('hots-posts', async () =
   saveRouteParams()
   const index = page.value - 1
 
-  const results = await $fetch('/api/hots/posts-page', {
+  const results = await $fetch('/api/hots', {
     params: {
       page: page.value,
       postsPerPage: POSTS_PER_PAGE,

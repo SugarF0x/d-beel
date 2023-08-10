@@ -35,7 +35,7 @@ const comment = ref('')
 const rating = ref(0)
 
 const { status, execute: publish } = useAsyncData('hots-posts', async () => {
-  const result = await $fetch('/api/hots/publish', {
+  const result = await $fetch('/api/hots', {
     method: 'POST',
     body: {
       hero: hero.value,
