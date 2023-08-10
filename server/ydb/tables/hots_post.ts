@@ -20,5 +20,6 @@ export interface HotsPostRow {
   created_by: string | null
   hero: HotsHero | null
   rating: number
+  reactions: Record<string, string[]> | null
   username: string
 }
