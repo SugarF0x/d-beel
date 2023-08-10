@@ -65,8 +65,8 @@ export default defineEventHandler(async (event) => {
       const key = `${reaction.post_username}-${reaction.post_created_at.valueOf()}`
       const post = keyToPostMap[key]
       post.reactions ??= {}
-      post.reactions[reaction.created_by] ??= []
-      post.reactions[reaction.created_by].push(reaction.shortcut)
+      post.reactions[reaction.shortcut] ??= []
+      post.reactions[reaction.shortcut].push(reaction.created_by)
     }
 
     return {
