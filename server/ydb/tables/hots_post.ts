@@ -15,7 +15,7 @@ CREATE TABLE hots_post
 
 export interface HotsPostRow {
   comment: string
-  created_at: Date
+  created_at: string
   created_by: string | null
   hero: HotsHero | null
   rating: number

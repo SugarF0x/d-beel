@@ -53,13 +53,13 @@ export default defineEventHandler(async (event) => {
     `, filterOptionalQueryParams({
       "$keys": TypedValues.list(
         Types.tuple(Types.UTF8, Types.DATETIME),
-        posts.map(post => [post.username, post.created_at])
+        posts.map(post => [post.username, new Date(post.created_at)])
       )
     }))
 
     const reactions = TypedData.createNativeObjects(reactionsResultSets[0]) as unknown as Array<HotsPostReactionRow>
 
-    const keyToPostMap: Record<string, HotsPost> = Object.fromEntries(posts.map(post => [`${post.username}-${post.created_at.valueOf()}`, post]))
+    const keyToPostMap: Record<string, HotsPost> = Object.fromEntries(posts.map(post => [`${post.username}-${new Date(post.created_at).valueOf()}`, post]))
 
     for (const reaction of reactions) {
       const key = `${reaction.post_username}-${reaction.post_created_at.valueOf()}`
