@@ -4,7 +4,9 @@ import { hotsRatingColors } from "~/const/hots/colors"
 import type { HotsPost } from "~/server/api/hots/index.get"
 import { emojiShortcutToImageUrlMap } from "~/const/hots/emojiShortcutToImageUrlMap"
 
-defineProps<HotsPost>()
+defineProps<HotsPost & {
+  preview?: boolean
+}>()
 
 const { data: authData } = useAuth()
 </script>
@@ -34,8 +36,8 @@ const { data: authData } = useAuth()
 
       <v-rating class="rating" :readonly="true" :model-value="rating" :color="hotsRatingColors[rating]" />
 
-      <div v-if="reactions" class="reactions">
-        <div v-for="[shortcut, authors] of Object.entries(reactions)" class="reaction" :class="{ authored: authors.includes(authData?.user.username) }">
+      <div v-if="!preview" class="reactions">
+        <div v-for="[shortcut, authors] of Object.entries(reactions ?? {})" class="reaction" :class="{ authored: authors.includes(authData?.user.username) }">
           <v-img :src="emojiShortcutToImageUrlMap[shortcut]" />
           {{ authors.length }}
         </div>

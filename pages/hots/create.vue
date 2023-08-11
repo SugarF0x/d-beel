@@ -87,6 +87,7 @@ const isLoading = computed(() => status.value === 'pending')
           :username="username"
           :created_at="new Date().toISOString()"
           :created_by="authData?.user.username"
+          preview
         />
 
         <v-btn color="primary" @click="publish" :disabled="isLoading">Опубликовать</v-btn>
