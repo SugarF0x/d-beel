@@ -2,6 +2,7 @@
 import onSuspenseRerender from "~/hooks/onSuspenseRerender"
 import { useUrlSearchParams } from "@vueuse/core"
 import saveRouteParams from "~/utils/router/saveRouteParams"
+import type { HotsPost } from "~/server/api/hots/index.get"
 
 definePageMeta({ layout: 'hots' })
 useHead({ title: 'Дебилы Шторма' })
@@ -56,6 +57,25 @@ function search() {
 onSuspenseRerender(() => { status.value === "idle" && execute() })
 
 const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.value.totalPosts / POSTS_PER_PAGE)) ?? 0))
+
+const breakpoints = useBreakpoints({
+  1: 0,
+  2: 600,
+  3: 960,
+}).current()
+
+const posts = computed<HotsPost[]>(() => {
+  if (!data.value) return []
+
+  const columns = breakpoints.value.length
+  return data.value.posts.reduce(
+    (acc, val, index) => {
+      acc[index % columns].push(val)
+      return acc
+    },
+    Array.from({ length: columns }, () => []) as HotsPost[][]
+  ).flat()
+})
 </script>
 
 <template>
@@ -76,7 +96,7 @@ const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.valu
     </v-container>
 
     <v-container class="grid-container" :class="{ loading: pending }">
-      <hots-post v-for="(post, index) in data?.posts ?? []" :key="`${post.username}-${index}`" v-bind="post" />
+      <hots-post v-for="post in posts" :key="`${post.username}-${post.created_at}`" v-bind="post" />
     </v-container>
 
     <v-pagination v-model="page" :length="totalPages" :disabled="pending" density="comfortable" />
