@@ -37,10 +37,20 @@ const { data: authData } = useAuth()
       <v-rating class="rating" :readonly="true" :model-value="rating" :color="hotsRatingColors[rating]" />
 
       <div v-if="!preview" class="reactions">
-        <div v-for="[shortcut, authors] of Object.entries(reactions ?? {})" class="reaction" :class="{ authored: authors.includes(authData?.user.username) }">
+        <button v-if="authData" class="reaction new">
+          <v-icon icon="mdi-plus-circle-outline" />
+        </button>
+
+        <button
+          v-for="[shortcut, authors] of Object.entries(reactions ?? {})"
+          :key="shortcut"
+          :class="{ authored: authors.includes(authData?.user.username) }"
+          :disabled="!authData"
+          class="reaction"
+        >
           <v-img :src="emojiShortcutToImageUrlMap[shortcut]" />
           {{ authors.length }}
-        </div>
+        </button>
       </div>
     </div>
   </div>
@@ -57,6 +67,7 @@ const { data: authData } = useAuth()
 .reactions {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   gap: 8px;
   margin: 0 8px 8px 8px;
 }
@@ -69,9 +80,43 @@ const { data: authData } = useAuth()
   gap: 4px;
   padding: 0 8px;
   border: 1px solid transparent;
+  transition: .1s ease-in-out;
+  transform: scale(1);
+  user-select: none;
 
   &.authored {
-    border: 1px solid #D2FCFF;
+    border-color: rgba(210, 252, 255, 0.8);
+  }
+
+  &.new {
+    padding: 4px;
+    opacity: .5;
+  }
+
+  &:not(:disabled) {
+    &:hover {
+      border-color: rgba(210, 252, 255, 0.3)
+    }
+
+    &:active {
+      transform: scale(.95);
+    }
+
+    &.authored {
+      &:hover {
+        border-color: rgba(210, 252, 255, 1);
+      }
+    }
+
+    &.new {
+      &:hover {
+        opacity: 1;
+      }
+
+      &:active {
+        opacity: .8;
+      }
+    }
   }
 }
 
