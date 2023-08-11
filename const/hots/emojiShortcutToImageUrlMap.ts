@@ -1,4 +1,4 @@
-export const emojiShortcutToImageUrlMap: Record<string, string> = {
+export default {
   ":y:": "/img/hots/emoji/hand-symbol-pack-1/thumbs-up.png",
   ":n:": "/img/hots/emoji/hand-symbol-pack-1/thumbs-down.png",
   ":fistbump:": "/img/hots/emoji/hand-symbol-pack-1/pound-it.png",

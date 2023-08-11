@@ -2,7 +2,7 @@
 import { format } from 'date-fns'
 import { hotsRatingColors } from "~/const/hots/colors"
 import type { HotsPost } from "~/server/api/hots/index.get"
-import { emojiShortcutToImageUrlMap } from "~/const/hots/emojiShortcutToImageUrlMap"
+import emojiShortcutToImageUrlMap from "~/const/hots/emojiShortcutToImageUrlMap"
 
 defineProps<HotsPost & {
   preview?: boolean
