@@ -1,4 +1,4 @@
-export default {
+const MAP: Record<string, string> = {
   ":y:": "/img/hots/emoji/hand-symbol-pack-1/thumbs-up.png",
   ":n:": "/img/hots/emoji/hand-symbol-pack-1/thumbs-down.png",
   ":fistbump:": "/img/hots/emoji/hand-symbol-pack-1/pound-it.png",
@@ -3859,3 +3859,5 @@ export default {
   ":wzzz:": "/img/hots/emoji/winter-veil-phrases-pack/sleepy.png",
   ":wtt:": "/img/hots/emoji/winter-veil-phrases-pack/cry.png",
 }
+
+export default MAP
