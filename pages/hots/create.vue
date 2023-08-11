@@ -90,7 +90,10 @@ const isLoading = computed(() => status.value === 'pending')
           preview
         />
 
-        <v-btn color="primary" @click="publish" :disabled="isLoading">Опубликовать</v-btn>
+        <div class="actions">
+          <v-btn color="secondary" @click="$router.back" :disabled="isLoading">Отменить</v-btn>
+          <v-btn color="primary" @click="publish" :disabled="isLoading">Опубликовать</v-btn>
+        </div>
       </v-container>
     </v-window-item>
   </v-window>
@@ -110,6 +113,12 @@ const isLoading = computed(() => status.value === 'pending')
 .hero-selection-section {
   display: flex;
   flex-direction: column;
+  gap: 8px;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
   gap: 8px;
 }
 </style>
