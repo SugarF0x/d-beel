@@ -3,12 +3,27 @@ import { format } from 'date-fns'
 import { hotsRatingColors } from "~/const/hots/colors"
 import type { HotsPost } from "~/server/api/hots/index.get"
 import emojiShortcutToImageUrlMap from "~/const/hots/emojiShortcutToImageUrlMap"
+import EmojiSelector from "~/components/Hots/EmojiSelector.vue"
 
-defineProps<HotsPost & {
+const props = defineProps<HotsPost & {
   preview?: boolean
 }>()
 
 const { data: authData } = useAuth()
+
+const isEmojiSelectorOpen = ref(false)
+
+const ownEmoji = computed(() => {
+  if (!authData.value) return []
+
+  const shortcuts: string[] = []
+
+  for (const shortcut in props.reactions ?? {}) {
+    if (props.reactions?.[shortcut].includes(authData.value.user.username)) shortcuts.push(shortcut)
+  }
+
+  return shortcuts
+})
 </script>
 
 <template>
@@ -37,7 +52,7 @@ const { data: authData } = useAuth()
       <v-rating class="rating" :readonly="true" :model-value="rating" :color="hotsRatingColors[rating]" />
 
       <div v-if="!preview" class="reactions">
-        <button v-if="authData" class="reaction new">
+        <button v-if="authData" class="reaction new" @click="isEmojiSelectorOpen = true">
           <v-icon icon="mdi-plus-circle-outline" />
         </button>
 
@@ -53,6 +68,13 @@ const { data: authData } = useAuth()
         </button>
       </div>
     </div>
+
+    <emoji-selector
+      v-if="isEmojiSelectorOpen"
+      class="emoji-selector"
+      :selected-emoji="ownEmoji"
+      @hide="isEmojiSelectorOpen = false"
+    />
   </div>
 </template>
 
@@ -62,6 +84,14 @@ const { data: authData } = useAuth()
   border: 1px solid rgba(153,204,255,.2);
   background-color: #0a1133;
   position: relative;
+}
+
+.emoji-selector {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 16px;
 }
 
 .reactions {
