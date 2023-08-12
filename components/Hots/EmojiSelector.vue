@@ -4,7 +4,7 @@ import emojiShortcutToImageUrlMap from "~/const/hots/emojiShortcutToImageUrlMap"
 
 defineProps<{ selectedEmoji: string[] }>()
 const emit = defineEmits<{
-  (e: 'click', emoji: string): void
+  (e: 'select', emoji: string): void
   (e: 'hide'): void
 }>()
 
@@ -31,7 +31,7 @@ function close() {
 }
 
 function select(emoji: string) {
-  emit('click', emoji)
+  emit('select', emoji)
   close()
 }
 </script>
@@ -86,6 +86,7 @@ function select(emoji: string) {
   gap: 4px;
   flex-wrap: wrap;
   justify-content: space-between;
+  margin-bottom: 4px;
 }
 
 .emoji {

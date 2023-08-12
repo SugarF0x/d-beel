@@ -5,6 +5,15 @@ import type { HotsPost } from "~/server/api/hots/index.get"
 import emojiShortcutToImageUrlMap from "~/const/hots/emojiShortcutToImageUrlMap"
 import EmojiSelector from "~/components/Hots/EmojiSelector.vue"
 
+const emit = defineEmits<{
+  (e: 'reaction-update', p: {
+    emoji: string,
+    add: boolean,
+    username: string,
+    created_at: string
+  }): void
+}>()
+
 const props = defineProps<HotsPost & {
   preview?: boolean
 }>()
@@ -24,6 +33,32 @@ const ownEmoji = computed(() => {
 
   return shortcuts
 })
+
+const isLoading = ref(false)
+async function react(emoji: string) {
+  isLoading.value = true
+
+  const shouldAdd = !ownEmoji.value.includes(emoji)
+  const result = await $fetch('/api/hots', {
+    method: 'PUT',
+    body: {
+      type: 'reaction',
+      username: props.username,
+      created_at: props.created_at,
+      reaction: emoji,
+      shouldAdd
+    }
+  })
+
+  if (result) emit('reaction-update', {
+    emoji,
+    add: shouldAdd,
+    username: props.username,
+    created_at: props.created_at
+  })
+
+  isLoading.value = false
+}
 </script>
 
 <template>
@@ -52,7 +87,12 @@ const ownEmoji = computed(() => {
       <v-rating class="rating" :readonly="true" :model-value="rating" :color="hotsRatingColors[rating]" />
 
       <div v-if="!preview" class="reactions">
-        <button v-if="authData" class="reaction new" @click="isEmojiSelectorOpen = true">
+        <button
+          v-if="authData"
+          :disabled="isLoading"
+          class="reaction new"
+          @click="isEmojiSelectorOpen = true"
+        >
           <v-icon icon="mdi-plus-circle-outline" />
         </button>
 
@@ -60,8 +100,9 @@ const ownEmoji = computed(() => {
           v-for="[shortcut, authors] of Object.entries(reactions ?? {})"
           :key="shortcut"
           :class="{ authored: authors.includes(authData?.user.username) }"
-          :disabled="!authData"
+          :disabled="!authData || isLoading"
           class="reaction"
+          @click="react(shortcut)"
         >
           <v-img :src="emojiShortcutToImageUrlMap[shortcut]" />
           {{ authors.length }}
@@ -73,6 +114,7 @@ const ownEmoji = computed(() => {
       v-if="isEmojiSelectorOpen"
       class="emoji-selector"
       :selected-emoji="ownEmoji"
+      @select="react"
       @hide="isEmojiSelectorOpen = false"
     />
   </div>

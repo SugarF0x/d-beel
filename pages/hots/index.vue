@@ -3,9 +3,12 @@ import onSuspenseRerender from "~/hooks/onSuspenseRerender"
 import { useUrlSearchParams } from "@vueuse/core"
 import saveRouteParams from "~/utils/router/saveRouteParams"
 import type { HotsPost } from "~/server/api/hots/index.get"
+import { without } from "lodash-es"
 
 definePageMeta({ layout: 'hots' })
 useHead({ title: 'Дебилы Шторма' })
+
+const { data: authData } = useAuth()
 
 const POSTS_PER_PAGE = 12
 
@@ -76,6 +79,22 @@ const posts = computed<HotsPost[]>(() => {
     Array.from({ length: columns }, () => []) as HotsPost[][]
   ).flat()
 })
+
+function updateReaction(props: { emoji: string, add: boolean, username: string, created_at: string }) {
+  if (!data.value) return
+  if (!authData.value) return
+
+  const post = data.value.posts.find(post => post.username === props.username && post.created_at === props.created_at)
+  if (!post) return
+
+  post.reactions ??= {}
+  post.reactions[props.emoji] ??= []
+
+  if (props.add) return void post.reactions[props.emoji].push(authData.value.user.username)
+
+  post.reactions[props.emoji] = without(post.reactions[props.emoji], authData.value.user.username)
+  if (!post.reactions[props.emoji].length) delete post.reactions[props.emoji]
+}
 </script>
 
 <template>
@@ -96,7 +115,7 @@ const posts = computed<HotsPost[]>(() => {
     </v-container>
 
     <v-container class="grid-container" :class="{ loading: pending }">
-      <hots-post v-for="post in posts" :key="`${post.username}-${post.created_at}`" v-bind="post" />
+      <hots-post v-for="post in posts" :key="`${post.username}-${post.created_at}`" v-bind="post" @reaction-update="updateReaction" />
     </v-container>
 
     <v-pagination v-model="page" :length="totalPages" :disabled="pending" density="comfortable" />
