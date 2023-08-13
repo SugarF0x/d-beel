@@ -108,6 +108,10 @@ async function react(emoji: string) {
           {{ authors.length }}
         </button>
       </div>
+
+      <div class="loader-container">
+        <v-progress-linear height="1" v-show="isLoading" indeterminate />
+      </div>
     </div>
 
     <emoji-selector
@@ -141,7 +145,12 @@ async function react(emoji: string) {
   justify-content: flex-end;
   align-items: center;
   gap: 8px;
-  margin: 0 8px 8px 8px;
+  margin: 0 8px;
+}
+
+.loader-container {
+  margin-top: 8px;
+  height: 1px;
 }
 
 .reaction {
@@ -155,6 +164,10 @@ async function react(emoji: string) {
   transition: .1s ease-in-out;
   transform: scale(1);
   user-select: none;
+
+  &:disabled {
+    opacity: .5;
+  }
 
   &.authored {
     border-color: rgba(210, 252, 255, 0.8);
