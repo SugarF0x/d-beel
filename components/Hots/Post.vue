@@ -104,7 +104,7 @@ async function react(emoji: string) {
           class="reaction"
           @click="react(shortcut)"
         >
-          <v-img :src="emojiShortcutToImageUrlMap[shortcut]" />
+          <v-img height="32" width="32" :src="emojiShortcutToImageUrlMap[shortcut]" />
           {{ authors.length }}
         </button>
       </div>
@@ -142,6 +142,7 @@ async function react(emoji: string) {
 
 .reactions {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   align-items: center;
   gap: 8px;
