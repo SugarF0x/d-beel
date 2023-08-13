@@ -71,7 +71,7 @@ async function react(emoji: string) {
         <table>
           <tr>
             <th>Автор</th>
-            <td>{{ created_by ?? "легаси" }}</td>
+            <td>{{ created_by ?? "-" }}</td>
           </tr>
           <tr>
             <th>Дата публикации</th>
@@ -110,7 +110,7 @@ async function react(emoji: string) {
       </div>
 
       <div class="loader-container">
-        <v-progress-linear height="1" v-show="isLoading" indeterminate />
+        <v-progress-linear height="1" v-show="isLoading" :indeterminate="true" />
       </div>
     </div>
 
