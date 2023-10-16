@@ -99,7 +99,7 @@ async function react(emoji: string) {
         <button
           v-for="[shortcut, authors] of Object.entries(reactions ?? {})"
           :key="shortcut"
-          :class="{ authored: authors.includes(authData?.user.username) }"
+          :class="{ authored: authors.includes(authData?.user.username), loading: isLoading }"
           :disabled="!authData || isLoading"
           class="reaction"
           @click="react(shortcut)"
@@ -166,7 +166,7 @@ async function react(emoji: string) {
   transform: scale(1);
   user-select: none;
 
-  &:disabled {
+  &.loading {
     opacity: .5;
   }
 
