@@ -1,15 +1,5 @@
 import { blizz } from "~/server/utils/BlizzAPI"
-
-interface RealmQueryResponse {
-  results: Array<{
-    data: {
-      realms: Array<{
-        name: Record<string, string>
-        slug: string
-      }>
-    }
-  }>
-}
+import { RealmQueryResponse } from "~/server/ydb/types/wow/blizzApiResponse"
 
 export default defineEventHandler(async (event) => {
   const realm = await blizz.query<RealmQueryResponse>(`/data/wow/search/connected-realm`, {
