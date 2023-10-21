@@ -19,6 +19,9 @@ export default defineNuxtConfig({
       type: 'authjs'
     }
   },
+  vue: {
+    defineModel: true
+  },
   vuetify: {
     vuetifyOptions: {
       theme: {
