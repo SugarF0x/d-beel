@@ -1,47 +1,32 @@
 <script setup lang="ts">
-import { BlizzAPI } from "blizzapi"
-
-const api = new BlizzAPI({
-  region: "eu",
-  clientId: process.env.WOW_CLIENT_ID,
-  clientSecret: process.env.WOW_CLIENT_SECRET,
-})
-
 const names = [
   'Эльсвейрит',
   'Зефирковость',
   'Лапковость',
 ]
 
-const images = reactive<Record<string, string>>({})
+const images = ref<Record<string, string>>({})
+
+const realm = ref<undefined | string>()
 
 async function load(characterName: string) {
-  const realmSlug = 'gordunni'
+  const results = await $fetch('/api/wow/characters', { query: { characterName, realmSlug: realm.value } })
 
-  const results = await api.query(`/profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/character-media`, {
-    params: {
-      namespace: 'profile-eu',
-      locale: 'ru_RU'
-    }
-  })
+  console.log(results)
 
-
-  if (!results || typeof results !== 'object' || !('assets' in results)) return
-  const { assets } = { ...results }
-
-  if (!Array.isArray(assets)) return
-
-  for (const asset of assets) {
-    images[asset.key] = asset.value
-  }
+  images.value = results.media
 }
 </script>
 
 <template>
   <div class="flex">
-    <v-btn v-for="name in names" :key="name" @click="load(name)">
+    <v-btn v-for="name in names" :key="name" @click="load(name)" :disabled="!realm">
       {{ name }}
     </v-btn>
+  </div>
+
+  <div>
+    <wow-realm-selector v-model="realm" />
   </div>
 
   <div>
