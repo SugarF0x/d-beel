@@ -5,35 +5,25 @@ const names = [
   'Лапковость',
 ]
 
-const images = ref<Record<string, string>>({})
-
+const name = ref('')
 const realm = ref<undefined | string>()
 
-async function load(characterName: string) {
-  const results = await $fetch('/api/wow/characters', { query: { characterName, realmSlug: realm.value } })
-
-  console.log(results)
-
-  images.value = results.media
-}
+const { data, execute, status } = useAsyncData('character', () => $fetch('/api/wow/characters', { query: { characterName: name.value, realmSlug: realm.value } }), { immediate: false })
+const disabled = computed(() => status.value === 'pending' || !name.value || !realm.value)
 </script>
 
 <template>
-  <div class="flex">
-    <v-btn v-for="name in names" :key="name" @click="load(name)" :disabled="!realm">
-      {{ name }}
-    </v-btn>
-  </div>
-
   <div>
+    <div class="flex">
+      <v-btn v-for="username in names" :key="name" @click="name = username">
+        {{ username }}
+      </v-btn>
+    </div>
+
+    <v-text-field v-model="name" />
     <wow-realm-selector v-model="realm" />
-  </div>
+    <v-btn @click="execute" :disabled="disabled">Найти</v-btn>
 
-  <div>
-    <v-img v-for="url in images" :key="url" :src="url" inline />
+    <wow-profile v-if="data" :media="data.media" :profile="data.profile" />
   </div>
 </template>
-
-<style scoped lang="scss">
-
-</style>
