@@ -1,4 +1,6 @@
 <script setup lang="ts">
+definePageMeta({ layout: 'wow' })
+
 const names = [
   'Эльсвейрит',
   'Зефирковость',
@@ -15,7 +17,7 @@ const disabled = computed(() => status.value === 'pending' || !name.value || !re
 <template>
   <div>
     <div class="flex">
-      <v-btn v-for="username in names" :key="name" @click="name = username">
+      <v-btn v-for="username in names" :key="username" @click="name = username">
         {{ username }}
       </v-btn>
     </div>
