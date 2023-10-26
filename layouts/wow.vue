@@ -9,7 +9,7 @@
 <style scoped lang="scss">
 .wrapper {
   flex: 1;
-  background-image: url('/img/wow/background.jpg');
+  background-image: linear-gradient(transparent, black), url('/img/wow/background.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
