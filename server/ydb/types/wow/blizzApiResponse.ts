@@ -1,11 +1,8 @@
 export interface RealmQueryResponse {
-  results: Array<{
-    data: {
-      realms: Array<{
-        name: Record<string, string>
-        slug: string
-      }>
-    }
+  realms: Array<{
+    id: number
+    name: string
+    slug: string
   }>
 }
 

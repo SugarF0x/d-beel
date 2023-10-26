@@ -2,22 +2,18 @@ import { blizz } from "~/server/utils/BlizzAPI"
 import { RealmQueryResponse } from "~/server/ydb/types/wow/blizzApiResponse"
 
 export default defineEventHandler(async (event) => {
-  const realm = await blizz.query<RealmQueryResponse>(`/data/wow/search/connected-realm`, {
+  const response = await blizz.query<RealmQueryResponse>(`/data/wow/realm/index`, {
     params: {
-      locale: 'en_EN',
+      locale: 'ru_RU',
       namespace: 'dynamic-eu',
     }
   })
 
-  if ('error' in realm) throw new Error(realm.error)
+  if ('error' in response) throw new Error(response.error)
 
   return Object.fromEntries(
-    realm.results.flatMap(
-      result => (
-        result.data.realms.map(
-          realm => [realm.slug, realm.name.ru_RU]
-        )
-      )
+    response.realms.map(
+      realm => [realm.slug, realm.name]
     )
   )
 })
