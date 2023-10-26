@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import onSuspenseRerender from "~/hooks/onSuspenseRerender"
 import { useUrlSearchParams } from "@vueuse/core"
 import saveRouteParams from "~/utils/router/saveRouteParams"
 import type { HotsPost } from "~/server/api/hots/index.get"
