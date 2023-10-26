@@ -13,7 +13,10 @@
 <style scoped lang="scss">
 .wrapper {
   flex: 1;
-  background: url('/img/hots/background.jpg') center fixed;
+  background-image: url('/img/hots/background.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
   padding-bottom: 24px;
 }
 
