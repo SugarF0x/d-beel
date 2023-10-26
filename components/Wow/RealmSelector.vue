@@ -1,7 +1,8 @@
 <script setup lang="ts">
 const modelValue = defineModel<string | null>()
 
-const { data, pending } = useFetch('/api/wow/realms')
+const { data, pending, execute } = useFetch('/api/wow/realms', { immediate: false })
+onSuspenseRerender(execute)
 
 type Item = {
   title: string
