@@ -8,7 +8,7 @@ async function wrapper(event, context) {
 
   if (response.headers['set-cookie']) {
     response.multiValueHeaders ??= {}
-    response.multiValueHeaders['set-cookie'] = response.headers['set-cookie'].split(/(.*?),(.*?)($|,(?! ))/).filter(Boolean)
+    response.multiValueHeaders['set-cookie'] = response.headers['set-cookie'].split(/,(?! )/).filter(Boolean)
     delete response.headers['set-cookie']
   }
 
