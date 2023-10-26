@@ -11,5 +11,13 @@ export default defineEventHandler(async (event) => {
 
   if ('error' in realm) throw new Error(realm.error)
 
-  return Object.fromEntries(realm.results.flatMap(result => result.data.realms.map(realm => [realm.name.ru_RU, realm.slug])))
+  return Object.fromEntries(
+    realm.results.flatMap(
+      result => (
+        result.data.realms.map(
+          realm => [realm.slug, realm.name.ru_RU]
+        )
+      )
+    )
+  )
 })
