@@ -15,22 +15,22 @@ const disabled = computed(() => status.value === 'pending' || !name.value || !re
 </script>
 
 <template>
-  <div>
-    <div class="flex">
-      <v-btn v-for="username in names" :key="username" @click="name = username">
+  <v-container style="max-width: 1080px;">
+    <div style="display: flex; gap: 8px;">
+      <v-btn v-for="username in names" :key="username" @click="name = username" color="primary">
         {{ username }}
       </v-btn>
     </div>
 
-    <div class="flex gap-4 mt-4">
+    <div class="mt-4">
       <v-text-field v-model="name" label="Имя" />
       <wow-realm-selector v-model="realm" />
     </div>
 
-    <v-btn @click="execute" :disabled="disabled">Найти</v-btn>
+    <v-btn @click="execute" :disabled="disabled" color="secondary">Найти</v-btn>
 
     <div class="mt-4">
       <wow-profile v-if="data" :media="data.media" :profile="data.profile" />
     </div>
-  </div>
+  </v-container>
 </template>
