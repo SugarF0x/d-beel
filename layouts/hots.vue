@@ -1,7 +1,3 @@
-<script setup lang="ts">
-
-</script>
-
 <template>
   <div class="wrapper">
     <v-img class="hero" src="/img/hots/hero.png" />
