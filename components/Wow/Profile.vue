@@ -16,7 +16,7 @@ const backgroundImage = computed(() => `linear-gradient(transparent, #0008), url
 </script>
 
 <template>
-  <v-card class="wow-profile-card">
+  <v-card class="vars wow-profile-card">
     <div class="preview" :style="{ backgroundImage }">
       <v-img :src="`/img/wow/factions/${WowFactionToSlugMap[props.profile.faction]}/logo.png`" class="faction-logo" />
       <v-img :src="props.media.fullSize" class="image" />
@@ -36,6 +36,11 @@ const backgroundImage = computed(() => `linear-gradient(transparent, #0008), url
 </template>
 
 <style scoped lang="scss">
+.vars {
+  --content-padding: 8px;
+  --faction-logo-size: 64px;
+}
+
 .wow-profile-card {
   display: flex;
 }
@@ -56,15 +61,15 @@ const backgroundImage = computed(() => `linear-gradient(transparent, #0008), url
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 8px;
+  padding: var(--content-padding);
 }
 
 .faction-logo {
-  width: 64px;
-  height: 64px;
   position: absolute;
-  top: 8px;
-  left: 8px;
+  width: var(--faction-logo-size);
+  height: var(--faction-logo-size);
+  top: var(--content-padding);
+  left: var(--content-padding);
 }
 
 .guild {
@@ -73,6 +78,6 @@ const backgroundImage = computed(() => `linear-gradient(transparent, #0008), url
 
 .slot {
   flex: 1;
-  margin-top: 8px;
+  margin-top: var(--content-padding);
 }
 </style>
