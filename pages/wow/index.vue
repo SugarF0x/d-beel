@@ -18,7 +18,7 @@ const disabled = computed(() => status.value === 'pending' || !name.value || !re
 
 <template>
   <v-container style="max-width: 1080px;">
-    <div style="display: flex; gap: 8px;">
+    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
       <v-btn v-for="username in names" :key="username" @click="name = username" color="primary">
         {{ username }}
       </v-btn>
