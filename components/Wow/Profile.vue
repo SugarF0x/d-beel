@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { WowCharacterMedia, WowCharacterProfile } from "~/server/api/wow/characters.get"
+import { WowClassToColorMap } from "~/server/ydb/types/wow/class"
 
 const props = defineProps<{ profile: WowCharacterProfile, media: WowCharacterMedia }>()
 
@@ -16,7 +17,7 @@ const factionToSlugMap: Record<string, string> = { Альянс: 'alliance', О�
       <v-img :src="`/img/wow/factions/${factionToSlugMap[props.profile.faction]}/logo.png`" class="faction-logo" />
 
       <h3>{{ profile.fullName }}</h3>
-      <h5>{{ profile.level }} (ilvl {{ profile.itemLevel }}) {{ profile.race }} {{ profile.class }} ({{ profile.spec }})</h5>
+      <h5 :style="{ color: WowClassToColorMap[profile.class] }">{{ profile.level }} ({{ profile.itemLevel }}) {{ profile.race }} {{ profile.class }} ({{ profile.spec }})</h5>
       <h6 v-if="profile.guild">&lt;{{ profile.guild }}&gt;</h6>
     </div>
   </v-card>

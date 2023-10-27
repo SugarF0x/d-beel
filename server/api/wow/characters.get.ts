@@ -1,6 +1,7 @@
 import { z } from "zod"
 import { blizz } from "~/server/utils/BlizzAPI"
 import { WowCharacterMediaResponse, WowCharacterProfileResponse } from "~/server/ydb/types/wow/blizzApiResponse"
+import { WowClass } from "~/server/ydb/types/wow/class"
 
 const options = {
   params: {
@@ -14,7 +15,7 @@ export interface WowCharacterProfile {
   name: string
   fullName: string
   itemLevel: number
-  class: string
+  class: WowClass
   faction: string
   gender: string
   guild?: string
