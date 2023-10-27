@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <v-img class="hero" src="/img/hots/hero.png" />
+    <v-img class="hero" src="/img/wow/hero.png" />
 
     <slot />
   </div>
