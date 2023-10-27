@@ -8,12 +8,12 @@ export interface RealmQueryResponse {
 
 export interface WowCharacterProfileResponse {
   active_spec: { name: string }
-  active_title: { display_string: string }
+  active_title?: { display_string: string }
   average_item_level: number
   character_class: { name: string }
   faction: { name: string }
   gender: { name: string }
-  guild: { name: string }
+  guild?: { name: string }
   level: { name: number }
   race: { name: string }
   name: string

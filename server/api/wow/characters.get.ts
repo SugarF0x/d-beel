@@ -17,7 +17,7 @@ export interface WowCharacterProfile {
   class: string
   faction: string
   gender: string
-  guild: string
+  guild?: string
   level: number
   race: string
 }
@@ -49,9 +49,9 @@ export default defineEventHandler(async (event): Promise<{ profile: WowCharacter
       name,
       class: character_class.name,
       faction: faction.name,
-      fullName: active_title.display_string.replace('{name}', name),
+      fullName: active_title?.display_string.replace('{name}', name) ?? name,
       gender: gender.name,
-      guild: guild.name,
+      guild: guild?.name,
       itemLevel: average_item_level,
       level: level.name,
       race: race.name,
