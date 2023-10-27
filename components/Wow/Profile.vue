@@ -1,20 +1,30 @@
 <script setup lang="ts">
 import type { WowCharacterMedia, WowCharacterProfile } from "~/server/api/wow/characters.get"
 import { WowClassToColorMap } from "~/server/ydb/types/wow/class"
+import { WowRating } from "~/server/ydb/tables/wow_post"
+import { WowFactionToSlugMap } from "~/server/ydb/types/wow/faction"
 
-const props = defineProps<{ profile: WowCharacterProfile, media: WowCharacterMedia }>()
+const props = withDefaults(defineProps<{
+  profile: WowCharacterProfile,
+  media: WowCharacterMedia,
+  rating?: WowRating
+}>(), {
+  rating: WowRating.NEUTRAL
+})
 
-const factionToSlugMap: Record<string, string> = { Альянс: 'alliance', Орда: 'horde' }
+const backgroundImage = computed(() => `linear-gradient(transparent, #0008), url('/img/wow/profile/background/${props.rating.toLowerCase()}.jpg')`)
 </script>
 
 <template>
   <v-card class="wow-profile-card">
-    <v-img :src="props.media.fullSize" class="image" />
+    <div class="preview" :style="{ backgroundImage }">
+      <v-img :src="props.media.fullSize" class="image" />
+    </div>
 
     <v-divider vertical />
 
     <div class="content">
-      <v-img :src="`/img/wow/factions/${factionToSlugMap[props.profile.faction]}/logo.png`" class="faction-logo" />
+      <v-img :src="`/img/wow/factions/${WowFactionToSlugMap[props.profile.faction]}/logo.png`" class="faction-logo" />
 
       <h3>{{ profile.fullName }}</h3>
       <h5 :style="{ color: WowClassToColorMap[profile.class] }">{{ profile.level }} ({{ profile.itemLevel }}) {{ profile.race }} {{ profile.class }} ({{ profile.spec }})</h5>
@@ -30,10 +40,16 @@ const factionToSlugMap: Record<string, string> = { Альянс: 'alliance', О�
   display: flex;
 }
 
+.preview {
+  flex: .5;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
 .image {
   transform: scale(4);
   aspect-ratio: .5;
-  flex: .5;
 }
 
 .content {
