@@ -28,7 +28,7 @@ const backgroundImage = computed(() => `linear-gradient(transparent, #0008), url
 
       <h3>{{ profile.fullName }}</h3>
       <h5 :style="{ color: WowClassToColorMap[profile.class] }">{{ profile.level }} ({{ profile.itemLevel }}) {{ profile.race }} {{ profile.class }} ({{ profile.spec }})</h5>
-      <h6 v-if="profile.guild">&lt;{{ profile.guild }}&gt;</h6>
+      <h6 v-if="profile.guild" class="guild">&lt;{{ profile.guild }}&gt;</h6>
     </div>
   </v-card>
 </template>
@@ -63,5 +63,9 @@ const backgroundImage = computed(() => `linear-gradient(transparent, #0008), url
   position: absolute;
   top: 8px;
   right: 8px;
+}
+
+.guild {
+  opacity: .5;
 }
 </style>
