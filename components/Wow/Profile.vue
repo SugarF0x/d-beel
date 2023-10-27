@@ -47,6 +47,7 @@ const backgroundImage = computed(() => `linear-gradient(transparent, #0008), url
 
 .preview {
   flex: .5;
+  position: relative;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -69,7 +70,7 @@ const backgroundImage = computed(() => `linear-gradient(transparent, #0008), url
   width: var(--faction-logo-size);
   height: var(--faction-logo-size);
   top: var(--content-padding);
-  left: var(--content-padding);
+  right: var(--content-padding);
 }
 
 .guild {
