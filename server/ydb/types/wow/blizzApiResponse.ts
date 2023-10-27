@@ -14,8 +14,8 @@ export interface WowCharacterProfileResponse {
   faction: { name: string }
   gender: { name: string }
   guild?: { name: string }
-  level: { name: number }
   race: { name: string }
+  level: number
   name: string
 }
 

@@ -44,16 +44,18 @@ export default defineEventHandler(async (event): Promise<{ profile: WowCharacter
   const { name, faction, active_spec, active_title, gender, race, guild, level, character_class, average_item_level } = profile
   const assets = Object.fromEntries(media.assets.map(({ key, value }) => [key, value]))
 
+  console.log(profile)
+
   return {
     profile: {
       name,
+      level,
+      fullName: active_title?.display_string.replace('{name}', name) ?? name,
       class: character_class.name,
       faction: faction.name,
-      fullName: active_title?.display_string.replace('{name}', name) ?? name,
       gender: gender.name,
       guild: guild?.name,
       itemLevel: average_item_level,
-      level: level.name,
       race: race.name,
       spec: active_spec.name
     },
