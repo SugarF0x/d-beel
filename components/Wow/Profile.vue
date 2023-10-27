@@ -18,25 +18,25 @@ const backgroundImage = computed(() => `linear-gradient(transparent, #0008), url
 <template>
   <v-card class="wow-profile-card">
     <div class="preview" :style="{ backgroundImage }">
+      <v-img :src="`/img/wow/factions/${WowFactionToSlugMap[props.profile.faction]}/logo.png`" class="faction-logo" />
       <v-img :src="props.media.fullSize" class="image" />
     </div>
 
     <v-divider vertical />
 
     <div class="content">
-      <v-img :src="`/img/wow/factions/${WowFactionToSlugMap[props.profile.faction]}/logo.png`" class="faction-logo" />
-
       <h3>{{ profile.fullName }}</h3>
       <h5 :style="{ color: WowClassToColorMap[profile.class] }">{{ profile.level }} ({{ profile.itemLevel }}) {{ profile.race }} {{ profile.class }} ({{ profile.spec }})</h5>
       <h6 v-if="profile.guild" class="guild">&lt;{{ profile.guild }}&gt;</h6>
+      <div class="slot">
+        <slot />
+      </div>
     </div>
   </v-card>
 </template>
 
 <style scoped lang="scss">
 .wow-profile-card {
-  // TODO: remove this, its temporary (probably)
-  max-width: 690px;
   display: flex;
 }
 
@@ -54,6 +54,8 @@ const backgroundImage = computed(() => `linear-gradient(transparent, #0008), url
 
 .content {
   flex: 1;
+  display: flex;
+  flex-direction: column;
   padding: 8px;
 }
 
@@ -62,10 +64,15 @@ const backgroundImage = computed(() => `linear-gradient(transparent, #0008), url
   height: 64px;
   position: absolute;
   top: 8px;
-  right: 8px;
+  left: 8px;
 }
 
 .guild {
   opacity: .5;
+}
+
+.slot {
+  flex: 1;
+  margin-top: 8px;
 }
 </style>
