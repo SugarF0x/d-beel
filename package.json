@@ -5,7 +5,7 @@
   "scripts": {
     "build": "nuxt build --dotenv .env.prod",
     "bd": "yarn build && yarn deploy",
-    "deploy": "yarn deploy:backend && yarn deploy:frontend",
+    "deploy": "yarn deploy:frontend & yarn deploy:backend",
     "deploy:frontend": "sh yc-deploy.frontend.sh",
     "deploy:backend": "sh yc-deploy.backend.sh",
     "deploy:gateway": "sh yc-deploy.api-gateway.sh",
