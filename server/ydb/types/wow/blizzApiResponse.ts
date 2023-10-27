@@ -1,4 +1,5 @@
 import { WowClass } from "~/server/ydb/types/wow/class"
+import { WowFaction } from "~/server/ydb/types/wow/faction"
 
 export interface RealmQueryResponse {
   realms: Array<{
@@ -13,7 +14,7 @@ export interface WowCharacterProfileResponse {
   active_title?: { display_string: string }
   average_item_level: number
   character_class: { name: WowClass }
-  faction: { name: string }
+  faction: { name: WowFaction }
   gender: { name: string }
   guild?: { name: string }
   race: { name: string }
