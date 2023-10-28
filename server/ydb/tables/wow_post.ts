@@ -48,5 +48,5 @@ export interface WowPostRow {
   rating: WowRating
   comment: string
   encounter: WowEncounter
-  encounter_details: string
+  encounter_details?: string
 }
