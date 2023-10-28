@@ -12,7 +12,7 @@ const names = [
 const name = ref<null | string>(null)
 const realm = ref<null | string>(null)
 
-const { data, execute, status } = useAsyncData('character', () => $fetch('/api/wow/characters', { query: { characterName: name.value, realmSlug: realm.value }, retry: false }), { immediate: false })
+const { data, execute, status } = useAsyncData('character', () => $fetch('/api/wow/character', { query: { characterName: name.value, realmSlug: realm.value }, retry: false }), { immediate: false })
 const disabled = computed(() => status.value === 'pending' || !name.value || !realm.value)
 </script>
 
