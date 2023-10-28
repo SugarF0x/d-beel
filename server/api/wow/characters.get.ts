@@ -1,8 +1,7 @@
 import { z } from "zod"
 import { blizz } from "~/server/utils/BlizzAPI"
-import { WowCharacterMediaResponse, WowCharacterProfileResponse } from "~/server/ydb/types/wow/blizzApiResponse"
+import { WowCharacterMediaResponse, WowCharacterProfileResponse, WowProfileFaction, WowProfileGender } from "~/server/ydb/types/wow/blizzApiResponse"
 import { WowClass } from "~/server/ydb/types/wow/class"
-import { WowFaction } from "~/server/ydb/types/wow/faction"
 
 const options = {
   params: {
@@ -17,10 +16,11 @@ export interface WowCharacterProfile {
   fullName: string
   itemLevel: number
   class: WowClass
-  faction: WowFaction
-  gender: string
+  faction: WowProfileFaction
+  gender: WowProfileGender
   guild?: string
   level: number
+  id: number
   race: string
 }
 
@@ -43,19 +43,18 @@ export default defineEventHandler(async (event): Promise<{ profile: WowCharacter
 
   if ('error' in profile || 'error' in media) throw new Error()
 
-  const { name, faction, active_spec, active_title, gender, race, guild, level, character_class, average_item_level } = profile
+  const { id, name, faction, active_spec, active_title, gender, race, guild, level, character_class, average_item_level } = profile
   const assets = Object.fromEntries(media.assets.map(({ key, value }) => [key, value]))
-
-  console.log(profile)
 
   return {
     profile: {
       name,
       level,
+      id,
       fullName: active_title?.display_string.replace('{name}', name) ?? name,
       class: character_class.name,
-      faction: faction.name,
-      gender: gender.name,
+      faction: faction.type,
+      gender: gender.type,
       guild: guild?.name,
       itemLevel: average_item_level,
       race: race.name,

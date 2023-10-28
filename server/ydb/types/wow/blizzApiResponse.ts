@@ -1,5 +1,4 @@
 import { WowClass } from "~/server/ydb/types/wow/class"
-import { WowFaction } from "~/server/ydb/types/wow/faction"
 
 export interface RealmQueryResponse {
   realms: Array<{
@@ -9,16 +8,27 @@ export interface RealmQueryResponse {
   }>
 }
 
+export enum WowProfileGender {
+  FEMALE = 'FEMALE',
+  MALE = 'MALE',
+}
+
+export enum WowProfileFaction {
+  ALLIANCE = 'ALLIANCE',
+  HORDE = 'HORDE',
+}
+
 export interface WowCharacterProfileResponse {
   active_spec: { name: string }
   active_title?: { display_string: string }
   average_item_level: number
   character_class: { name: WowClass }
-  faction: { name: WowFaction }
-  gender: { name: string }
+  faction: { type: WowProfileFaction, name: string }
+  gender: { type: WowProfileGender, name: string }
   guild?: { name: string }
   race: { name: string }
   level: number
+  id: number
   name: string
 }
 

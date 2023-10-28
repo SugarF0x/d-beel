@@ -2,7 +2,6 @@
 import type { WowCharacterMedia, WowCharacterProfile } from "~/server/api/wow/characters.get"
 import { WowClassToColorMap } from "~/server/ydb/types/wow/class"
 import { WowRating } from "~/server/ydb/tables/wow_post"
-import { WowFactionToSlugMap } from "~/server/ydb/types/wow/faction"
 
 const props = withDefaults(defineProps<{
   profile: WowCharacterProfile,
@@ -18,7 +17,7 @@ const backgroundImage = computed(() => `linear-gradient(transparent, #0008), url
 <template>
   <v-card class="vars wow-profile-card">
     <div class="preview" :style="{ backgroundImage }">
-      <v-img :src="`/img/wow/factions/${WowFactionToSlugMap[props.profile.faction]}/logo.png`" class="faction-logo" />
+      <v-img :src="`/img/wow/factions/${props.profile.faction.toLowerCase()}/logo.png`" class="faction-logo" />
       <v-img :src="props.media.fullSize" class="image" />
     </div>
 
