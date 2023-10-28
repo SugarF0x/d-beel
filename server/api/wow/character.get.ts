@@ -1,5 +1,6 @@
 import { z } from "zod"
 import getCharacterInfo from "~/server/utils/wow/getCharacterInfo"
+import formatCharacterInfo from "~/server/utils/wow/formatCharacterInfo"
 
 export default defineEventHandler(async (event) => {
   const { characterName, realmSlug } = getQueryPayload(event, z.object({
@@ -7,5 +8,6 @@ export default defineEventHandler(async (event) => {
     realmSlug: z.string().min(3)
   }))
 
-  return getCharacterInfo(characterName, realmSlug)
+  const characterInfo = await getCharacterInfo(characterName, realmSlug)
+  return formatCharacterInfo(characterInfo)
 })

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { WowCharacterMedia, WowCharacterProfile } from "~/server/utils/wow/getCharacterInfo"
+import type { WowCharacterMedia, WowCharacterProfile } from "~/server/utils/wow/formatCharacterInfo"
 import { WowClassToColorMap } from "~/server/ydb/types/wow/class"
 import { WowRating } from "~/server/ydb/tables/wow_post"
 
