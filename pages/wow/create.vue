@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { WowEncounter } from "~/server/ydb/types/wow/encounter"
+
 definePageMeta({ layout: 'wow', middleware: ['auth'] })
 useHead({ title: 'Новый дебил' })
 
@@ -9,6 +11,8 @@ const { data, execute, status } = useAsyncData('character', () => $fetch('/api/w
 const disabled = computed(() => status.value === 'pending' || !name.value || !realm.value)
 
 const isConfirmed = ref(false)
+
+const encounter = ref<WowEncounter | null>(null)
 </script>
 
 <template>
@@ -32,7 +36,7 @@ const isConfirmed = ref(false)
           <v-btn width="128" height="64" color="success" @click="isConfirmed = true">Да</v-btn>
         </div>
         <div v-else>
-
+          <wow-encounter-selector v-model="encounter" />
         </div>
       </wow-profile>
     </div>
