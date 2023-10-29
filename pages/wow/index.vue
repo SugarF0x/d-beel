@@ -98,6 +98,10 @@ const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.valu
     columns: 2;
   }
 
+  @media only screen and (min-width: 1920px) {
+    columns: 3;
+  }
+
   column-gap: 20px;
 
   & > div {

@@ -48,6 +48,7 @@ const breakpoints = useBreakpoints({
   1: 0,
   2: 600,
   3: 960,
+  4: 1920,
 }).current()
 
 const posts = computed<HotsPost[]>(() => {
@@ -109,6 +110,10 @@ function updateReaction(props: { emoji: string, add: boolean, username: string, 
 
   @media only screen and (min-width: 960px) {
     columns: 3;
+  }
+
+  @media only screen and (min-width: 1920px) {
+    columns: 4;
   }
 
   column-gap: 20px;
