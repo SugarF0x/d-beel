@@ -2,6 +2,7 @@
 import saveRouteParams from "~/utils/router/saveRouteParams"
 
 definePageMeta({ layout: 'wow' })
+useHead({ title: 'Дебилы варика' })
 
 const POSTS_PER_PAGE = 12
 
