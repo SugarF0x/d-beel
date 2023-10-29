@@ -13,10 +13,10 @@ const disabled = computed(() => status.value === 'pending' || !name.value || !re
 
 const isConfirmed = ref(false)
 
-const encounter = ref<WowEncounter | null>(null)
+const encounter = ref<WowEncounter | undefined>()
 const encounterDetails = ref('')
 const comment = ref('')
-const rating = ref<WowRating | null>(null)
+const rating = ref<WowRating | undefined>()
 </script>
 
 <template>
@@ -34,7 +34,7 @@ const rating = ref<WowRating | null>(null)
     </v-row>
 
     <div class="mt-4">
-      <wow-profile v-if="data" :media="data.media" :profile="data.profile">
+      <wow-profile v-if="data" :media="data.media" :profile="data.profile" :rating="rating" >
         <div v-if="!isConfirmed" class="card-confirmation">
           <div class="prompt">Это тот персонаж?</div>
           <v-btn width="128" height="64" color="success" @click="isConfirmed = true">Да</v-btn>

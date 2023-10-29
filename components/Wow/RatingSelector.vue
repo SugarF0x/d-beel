@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { WowRating } from "~/server/ydb/tables/wow_post"
 
-const modelValue = defineModel<WowRating | null>()
+const modelValue = defineModel<WowRating | undefined>()
 </script>
 
 <template>
