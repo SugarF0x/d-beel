@@ -58,6 +58,7 @@ const backgroundImage = computed(() => `linear-gradient(transparent, #0008), url
 .image {
   flex: 1;
   transform: scale(3.5);
+  aspect-ratio: .5;
 }
 
 .content {
