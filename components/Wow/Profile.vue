@@ -27,6 +27,7 @@ const backgroundImage = computed(() => `linear-gradient(transparent, #0008), url
       <h3>{{ profile.fullName }}</h3>
       <h5 :style="{ color: WowClassToColorMap[profile.class] }">{{ profile.level }} ({{ profile.itemLevel }}) {{ profile.race }} {{ profile.class }} ({{ profile.spec }})</h5>
       <h6 v-if="profile.guild" class="guild">&lt;{{ profile.guild }}&gt;</h6>
+      <v-divider class="content-divider" />
       <div class="slot">
         <slot />
       </div>
@@ -81,5 +82,9 @@ const backgroundImage = computed(() => `linear-gradient(transparent, #0008), url
   display: flex;
   flex-direction: column;
   margin-top: var(--content-padding);
+}
+
+.content-divider {
+  margin-top: calc(var(--content-padding) / 2);
 }
 </style>
