@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { WowEncounter } from "~/server/ydb/types/wow/encounter"
+import { WowRating } from "~/server/ydb/tables/wow_post"
 
 definePageMeta({ layout: 'wow', middleware: ['auth'] })
 useHead({ title: 'Новый дебил' })
@@ -14,6 +15,8 @@ const isConfirmed = ref(false)
 
 const encounter = ref<WowEncounter | null>(null)
 const encounterDetails = ref('')
+const comment = ref('')
+const rating = ref<WowRating | null>(null)
 </script>
 
 <template>
@@ -39,6 +42,8 @@ const encounterDetails = ref('')
         <div v-else>
           <wow-encounter-selector v-model="encounter" />
           <v-text-field v-model="encounterDetails" label="Подробности" placeholder="Нелтарий +15" hide-details />
+          <v-textarea v-model="comment" label="Отзыв" />
+          <wow-rating-selector v-model="rating" />
         </div>
       </wow-profile>
     </div>
