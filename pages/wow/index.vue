@@ -2,6 +2,7 @@
 import saveRouteParams from "~/utils/router/saveRouteParams"
 import { format } from "date-fns"
 import { encounterToLocaleMap } from "~/server/ydb/types/wow/encounter"
+import { WowPost } from "~/server/api/wow/index.get"
 
 definePageMeta({ layout: 'wow' })
 useHead({ title: 'Дебилы варика' })
@@ -38,14 +39,7 @@ function search() {
   execute()
 }
 
-const posts = computed(() => data.value?.posts
-  // .concat(data.value.posts)
-  // .concat(data.value.posts)
-  // .concat(data.value.posts)
-  // .concat(data.value.posts)
-  // .concat(data.value.posts)
-  // .concat(data.value.posts)
-  ?? [])
+const posts = computed<WowPost[]>(() => data.value?.posts ?? [])
 
 onSuspenseRerender(() => { status.value === "idle" && execute() })
 
@@ -62,32 +56,36 @@ const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.valu
     @search="search"
   >
     <v-container v-if="posts.length">
-      <wow-profile v-for="post in posts" :key="post.created_at" v-bind="post" >
-        <table>
-          <tr>
-            <td>Автор</td>
-            <td>{{ post.created_by }}</td>
-          </tr>
-          <tr>
-            <td>Дата публикации</td>
-            <td>{{ format(new Date(post.created_at), 'dd.MM.yyyy') }}</td>
-          </tr>
-          <tr>
-            <td>Место встречи</td>
-            <td>{{ encounterToLocaleMap[post.encounter] }}</td>
-          </tr>
-          <tr v-if="post.encounter_details">
-            <td>Подробности</td>
-            <td>{{ post.encounter_details }}</td>
-          </tr>
-        </table>
+      <v-row>
+        <v-col v-for="post in posts" :key="post.created_at" cols="12" lg="6" >
+          <wow-profile v-bind="post" >
+            <table>
+              <tr>
+                <td>Автор</td>
+                <td>{{ post.created_by }}</td>
+              </tr>
+              <tr>
+                <td>Дата публикации</td>
+                <td>{{ format(new Date(post.created_at), 'dd.MM.yyyy') }}</td>
+              </tr>
+              <tr>
+                <td>Место встречи</td>
+                <td>{{ encounterToLocaleMap[post.encounter] }}</td>
+              </tr>
+              <tr v-if="post.encounter_details">
+                <td>Подробности</td>
+                <td>{{ post.encounter_details }}</td>
+              </tr>
+            </table>
 
-        <v-divider class="divider" />
+            <v-divider class="divider" />
 
-        <div class="comment">
-          {{ post.comment }}
-        </div>
-      </wow-profile>
+            <div>
+              {{ post.comment }}
+            </div>
+          </wow-profile>
+        </v-col>
+      </v-row>
     </v-container>
   </app-pagination>
 </template>
@@ -95,9 +93,5 @@ const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.valu
 <style scoped lang="scss">
 .divider {
   margin: 12px 0;
-}
-
-.comment {
-  font-size: 1.5em;
 }
 </style>
