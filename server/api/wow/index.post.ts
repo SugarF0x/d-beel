@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
   const { user: { username: created_by } } = await useServerAuth(event)
 
   const { name, realm, comment, rating, encounter, encounterDetails } = await getBodyPayload(event, z.object({
-    name: z.string().min(3).max(64).toLowerCase(),
+    name: z.string().min(3).max(64),
     realm: z.string().min(3).max(32),
     comment: z.string().min(3).max(2048),
     rating: z.nativeEnum(WowRating),

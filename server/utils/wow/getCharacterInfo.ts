@@ -10,8 +10,8 @@ const options = {
 
 export default async function getCharacterInfo(characterName: string, realmSlug: string) {
   const [profile, media] = await Promise.all([
-    blizz.query<WowCharacterProfileResponse>(`/profile/wow/character/${realmSlug}/${characterName}`, options),
-    blizz.query<WowCharacterMediaResponse>(`/profile/wow/character/${realmSlug}/${characterName}/character-media`, options),
+    blizz.query<WowCharacterProfileResponse>(`/profile/wow/character/${realmSlug}/${characterName.toLowerCase()}`, options),
+    blizz.query<WowCharacterMediaResponse>(`/profile/wow/character/${realmSlug}/${characterName.toLowerCase()}/character-media`, options),
   ])
 
   if ('error' in profile) throw new Error(profile.error)

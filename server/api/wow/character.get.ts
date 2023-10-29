@@ -4,7 +4,7 @@ import formatCharacterInfo from "~/server/utils/wow/formatCharacterInfo"
 
 export default defineEventHandler(async (event) => {
   const { characterName, realmSlug } = getQueryPayload(event, z.object({
-    characterName: z.string().min(3).toLowerCase(),
+    characterName: z.string().min(3),
     realmSlug: z.string().min(3)
   }))
 
