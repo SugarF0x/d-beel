@@ -71,6 +71,7 @@ watch(() => props.page, value => {
     <slot name="default" />
 
     <v-pagination
+      v-if="totalPages > 1"
       :model-value="page"
       @update:model-value="e => $emit('update:page', e)"
       :length="totalPages"
