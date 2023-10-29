@@ -32,9 +32,9 @@ export default defineEventHandler(async (event) => {
       DECLARE $limit AS Uint16;
       DECLARE $name AS Utf8?;
 
-      SELECT wow_post.*, Count("hots_post.*") OVER() AS total_posts
+      SELECT wow_post.*, Count("wow_post.*") OVER() AS total_posts
       FROM wow_post
-      WHERE IF($user is not NULL, Unicode::ToLower(hots_post.username) = Unicode::ToLower($username), true)
+      WHERE IF($name is not NULL, Unicode::ToLower(wow_post.name) = Unicode::ToLower($name), true)
       ORDER BY created_at DESC
       LIMIT $offset, $limit;
     `, filterOptionalQueryParams({
