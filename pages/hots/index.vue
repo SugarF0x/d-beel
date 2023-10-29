@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useUrlSearchParams } from "@vueuse/core"
 import saveRouteParams from "~/utils/router/saveRouteParams"
 import type { HotsPost } from "~/server/api/hots/index.get"
 import { without } from "lodash-es"
@@ -11,24 +10,9 @@ const { data: authData } = useAuth()
 
 const POSTS_PER_PAGE = 12
 
-const params = useUrlSearchParams<{ page: string, username: string }>('history', {
-  removeFalsyValues: true,
-  initialValue: {
-    page: '1',
-    username: ''
-  }
-})
-
-const searchValue = ref(params.username)
-watch(searchValue, value => { params.username = value })
-
-const page = ref(parseInt(params.page))
+const searchValue = ref('')
+const page = ref(1)
 const debouncedPageIndex = ref(page.value - 1)
-
-watch(page, value => {
-  params.page = String(value)
-  scrollTo({ top: 0, behavior: "smooth" })
-})
 
 const { data, pending, execute, status } = useAsyncData('hots-posts', async () => {
   saveRouteParams()

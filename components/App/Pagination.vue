@@ -1,5 +1,7 @@
 <script setup lang="ts">
-defineEmits<{
+import { useUrlSearchParams } from "@vueuse/core"
+
+const emit = defineEmits<{
   (e: 'update:page', value: number): void
   (e: 'update:input', value: string): void
   (e: 'search'): void
@@ -12,6 +14,26 @@ const props = defineProps<{
   loading: boolean
   createUrl: string
 }>()
+
+const params = useUrlSearchParams<{ page: string, username: string }>('history', {
+  removeFalsyValues: true,
+  initialValue: {
+    page: '1',
+    username: ''
+  }
+})
+
+onMounted(() => {
+  emit('update:page', parseInt(params.page))
+  emit('update:input', params.username)
+})
+
+watch(() => props.input, value => { params.username = value })
+
+watch(() => props.page, value => {
+  params.page = String(value)
+  scrollTo({ top: 0, behavior: "smooth" })
+})
 </script>
 
 <template>
@@ -20,7 +42,7 @@ const props = defineProps<{
       <v-row>
         <v-col cols="12" md="12" lg="4">
           <v-pagination
-            :value="page"
+            :model-value="page"
             @update:model-value="e => $emit('update:page', e)"
             :length="totalPages"
             :disabled="loading"
@@ -30,7 +52,7 @@ const props = defineProps<{
         </v-col>
         <v-col cols="12" sm="7" md="8" lg="5">
           <v-text-field
-            :value="input"
+            :model-value="input"
             @update:model-value="e => $emit('update:input', e)"
             hide-details
             label="Имя дебила"
@@ -49,7 +71,7 @@ const props = defineProps<{
     <slot name="default" />
 
     <v-pagination
-      :value="page"
+      :model-value="page"
       @update:model-value="e => $emit('update:page', e)"
       :length="totalPages"
       :disabled="loading"
