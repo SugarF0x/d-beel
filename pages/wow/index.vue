@@ -3,6 +3,7 @@ import saveRouteParams from "~/utils/router/saveRouteParams"
 import { format } from "date-fns"
 import { encounterToLocaleMap } from "~/server/ydb/types/wow/encounter"
 import { WowPost } from "~/server/api/wow/index.get"
+import { HotsPost } from "~/server/api/hots/index.get"
 
 definePageMeta({ layout: 'wow' })
 useHead({ title: 'Дебилы варика' })
@@ -39,7 +40,24 @@ function search() {
   execute()
 }
 
-const posts = computed<WowPost[]>(() => data.value?.posts ?? [])
+const breakpoints = useBreakpoints({
+  1: 0,
+  2: 960,
+  3: 1920,
+}).current()
+
+const posts = computed<WowPost[]>(() => {
+  if (!data.value) return []
+
+  const columns = breakpoints.value.length
+  return data.value.posts.reduce(
+    (acc, val, index) => {
+      acc[index % columns].push(val)
+      return acc
+    },
+    Array.from({ length: columns }, () => []) as WowPost[][]
+  ).flat()
+})
 
 onSuspenseRerender(() => { status.value === "idle" && execute() })
 
