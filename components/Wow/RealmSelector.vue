@@ -28,5 +28,6 @@ const items = computed<Item[]>(() => {
     :loading="pending"
     :disabled="pending"
     :items="items"
+    hide-details
   />
 </template>

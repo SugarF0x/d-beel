@@ -78,6 +78,8 @@ const backgroundImage = computed(() => `linear-gradient(transparent, #0008), url
 
 .slot {
   flex: 1;
+  display: flex;
+  flex-direction: column;
   margin-top: var(--content-padding);
 }
 </style>

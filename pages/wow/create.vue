@@ -2,14 +2,6 @@
 definePageMeta({ layout: 'wow', middleware: ['auth'] })
 useHead({ title: 'Новый дебил' })
 
-const names = [
-  'Эльсвейрит',
-  'Зефирковость',
-  'Лапковость',
-  'Вейларис',
-  'Пакипо'
-]
-
 const name = ref<null | string>(null)
 const realm = ref<null | string>(null)
 
@@ -19,22 +11,49 @@ const disabled = computed(() => status.value === 'pending' || !name.value || !re
 
 <template>
   <v-container style="max-width: 1080px;">
-    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-      <v-btn v-for="username in names" :key="username" @click="name = username; realm = 'gordunni'" color="primary">
-        {{ username }}
-      </v-btn>
-    </div>
+    <v-row>
+      <v-col>
+        <v-text-field hide-details v-model="name" label="Имя" />
+      </v-col>
+      <v-col>
+        <wow-realm-selector v-model="realm" />
+      </v-col>
+      <v-col cols="12" style="display: flex; justify-content: flex-end">
+        <v-btn @click="execute" :disabled="disabled" color="secondary">Найти</v-btn>
+      </v-col>
+    </v-row>
+
 
     <div class="mt-4">
-      <v-text-field v-model="name" label="Имя" />
-      <wow-realm-selector v-model="realm" />
-    </div>
-
-    <v-btn @click="execute" :disabled="disabled" color="secondary">Найти</v-btn>
-
-    <div class="mt-4">
-      <wow-profile v-if="data" :media="data.media" :profile="data.profile" />
+      <wow-profile v-if="data" :media="data.media" :profile="data.profile">
+        <div class="card-confirmation">
+          <div class="prompt">Это тот персонаж?</div>
+          <div class="actions">
+            <v-btn width="128" height="64" color="error">Нет</v-btn>
+            <v-btn width="128" height="64" color="success">Да</v-btn>
+          </div>
+        </div>
+      </wow-profile>
     </div>
   </v-container>
 </template>
 
+<style scoped lang="scss">
+.card-confirmation {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .prompt {
+    font-size: 2em;
+  }
+
+  .actions {
+    display: flex;
+    margin-top: 8px;
+    gap: 16px;
+  }
+}
+</style>
