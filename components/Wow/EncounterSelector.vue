@@ -11,6 +11,7 @@ const items = Object.values(WowEncounter).map(value => ({ value, title: encounte
     v-model="modelValue"
     label="Место встречи"
     :items="items"
+    :placeholder="encounterToLocaleMap[WowEncounter.KEY]"
     hide-details
   />
 </template>

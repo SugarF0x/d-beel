@@ -13,6 +13,7 @@ const disabled = computed(() => status.value === 'pending' || !name.value || !re
 const isConfirmed = ref(false)
 
 const encounter = ref<WowEncounter | null>(null)
+const encounterDetails = ref('')
 </script>
 
 <template>
@@ -37,6 +38,7 @@ const encounter = ref<WowEncounter | null>(null)
         </div>
         <div v-else>
           <wow-encounter-selector v-model="encounter" />
+          <v-text-field v-model="encounterDetails" label="Подробности" placeholder="Нелтарий +15" hide-details />
         </div>
       </wow-profile>
     </div>
