@@ -48,7 +48,7 @@ export default defineEventHandler(async (event) => {
     const totalPosts = results[0]?.total_posts ?? 0
     const posts = results.map<WowPost>(post => ({
       ...omit(post, 'total_posts', 'profile', 'media'),
-      ...formatCharacterInfo(post),
+      ...formatCharacterInfo({ profile: JSON.parse(post.profile), media: JSON.parse(post.media) }),
     }))
 
     return {

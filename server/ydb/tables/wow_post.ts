@@ -34,8 +34,8 @@ export interface WowPostRow {
   realm: string
   created_at: string
   id: number
-  profile: WowCharacterProfileResponse
-  media: WowCharacterMediaResponse
+  profile: string // as WowCharacterProfileResponse
+  media: string // as WowCharacterMediaResponse
   created_by: string
   rating: WowRating
   comment: string
