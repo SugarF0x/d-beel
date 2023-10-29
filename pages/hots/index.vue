@@ -97,38 +97,21 @@ function updateReaction(props: { emoji: string, add: boolean, username: string, 
 </script>
 
 <template>
-  <div>
-    <v-container>
-      <v-row>
-        <v-col cols="12" md="12" lg="4">
-          <v-pagination v-model="page" :length="totalPages" :disabled="pending" :total-visible="Math.min(totalPages, 5)" density="comfortable" />
-        </v-col>
-        <v-col cols="12" sm="7" md="8" lg="5">
-          <v-text-field v-model="searchValue" hide-details label="Имя дебила" @keyup.enter="search" :loading="pending" :diabled="pending" />
-        </v-col>
-        <v-col cols="12" sm="5" md="4" lg="3" class="action">
-          <v-btn color="primary" @click="search">Поиск</v-btn>
-          <v-btn color="secondary" @click="navigateTo('/hots/create')">Создать</v-btn>
-        </v-col>
-      </v-row>
-    </v-container>
-
+  <app-pagination
+    v-model:page="page"
+    v-model:input="searchValue"
+    :loading="pending"
+    :total-pages="totalPages"
+    create-url="/hots/create"
+    @search="search"
+  >
     <v-container class="grid-container" :class="{ loading: pending }">
       <hots-post v-for="post in posts" :key="`${post.username}-${post.created_at}`" v-bind="post" @reaction-update="updateReaction" />
     </v-container>
-
-    <v-pagination v-model="page" :length="totalPages" :disabled="pending" density="comfortable" />
-  </div>
+  </app-pagination>
 </template>
 
 <style scoped lang="scss">
-.action {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-}
-
 .loading {
   opacity: .5
 }
