@@ -55,37 +55,33 @@ const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.valu
     create-url="/wow/create"
     @search="search"
   >
-    <v-container v-if="posts.length">
-      <v-row>
-        <v-col v-for="post in posts" :key="post.created_at" cols="12" lg="6" >
-          <wow-profile v-bind="post" >
-            <table>
-              <tr>
-                <td>Автор</td>
-                <td>{{ post.created_by }}</td>
-              </tr>
-              <tr>
-                <td>Дата публикации</td>
-                <td>{{ format(new Date(post.created_at), 'dd.MM.yyyy') }}</td>
-              </tr>
-              <tr>
-                <td>Место встречи</td>
-                <td>{{ encounterToLocaleMap[post.encounter] }}</td>
-              </tr>
-              <tr v-if="post.encounter_details">
-                <td>Подробности</td>
-                <td>{{ post.encounter_details }}</td>
-              </tr>
-            </table>
+    <v-container v-if="posts.length" class="grid-container" >
+      <wow-profile v-for="post in posts" :key="post.created_at" v-bind="post" >
+        <table>
+          <tr>
+            <td>Автор</td>
+            <td>{{ post.created_by }}</td>
+          </tr>
+          <tr>
+            <td>Дата публикации</td>
+            <td>{{ format(new Date(post.created_at), 'dd.MM.yyyy') }}</td>
+          </tr>
+          <tr>
+            <td>Место встречи</td>
+            <td>{{ encounterToLocaleMap[post.encounter] }}</td>
+          </tr>
+          <tr v-if="post.encounter_details">
+            <td>Подробности</td>
+            <td>{{ post.encounter_details }}</td>
+          </tr>
+        </table>
 
-            <v-divider class="divider" />
+        <v-divider class="divider" />
 
-            <div>
-              {{ post.comment }}
-            </div>
-          </wow-profile>
-        </v-col>
-      </v-row>
+        <div>
+          {{ post.comment }}
+        </div>
+      </wow-profile>
     </v-container>
   </app-pagination>
 </template>
@@ -93,5 +89,23 @@ const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.valu
 <style scoped lang="scss">
 .divider {
   margin: 12px 0;
+}
+
+.grid-container {
+  columns: 1;
+
+  @media only screen and (min-width: 960px) {
+    columns: 2;
+  }
+
+  column-gap: 20px;
+
+  & > div {
+    &:not(:first-child) {
+      margin-top: 20px;
+    }
+
+    break-inside: avoid;
+  }
 }
 </style>
