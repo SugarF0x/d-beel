@@ -5,6 +5,8 @@ import stringToNumber from "~/utils/zod/stringToNumber"
 import { omit } from "lodash-es"
 import { HotsPostReactionRow } from "~/server/ydb/tables/hots_post_reaction"
 
+const { uint16, optional, utf8, list } = TypedValues
+
 export interface HotsPost extends HotsPostRow {
   reactions?: Record<string, string[]>
 }
@@ -35,9 +37,9 @@ export default defineEventHandler(async (event) => {
       ORDER BY created_at DESC
       LIMIT $offset, $limit;
     `, filterOptionalQueryParams({
-      "$offset": TypedValues.uint16(offset),
-      "$limit": TypedValues.uint16(postsPerPage),
-      "$username": username && TypedValues.optional(TypedValues.utf8(username))
+      "$offset": uint16(offset),
+      "$limit": uint16(postsPerPage),
+      "$username": username && optional(utf8(username))
     }))
 
     const results = TypedData.createNativeObjects(postsResultSets[0]) as unknown as Array<HotsPostRow & { total_posts: number }>
@@ -51,7 +53,7 @@ export default defineEventHandler(async (event) => {
       SELECT * FROM hots_post_reaction
       WHERE AsTuple(post_username, post_created_at) IN $keys;
     `, filterOptionalQueryParams({
-      "$keys": TypedValues.list(
+      "$keys": list(
         Types.tuple(Types.UTF8, Types.DATETIME),
         posts.map(post => [post.username, new Date(post.created_at)])
       )
