@@ -7,6 +7,8 @@ const realm = ref<null | string>(null)
 
 const { data, execute, status } = useAsyncData('character', () => $fetch('/api/wow/character', { query: { characterName: name.value, realmSlug: realm.value }, retry: false }), { immediate: false })
 const disabled = computed(() => status.value === 'pending' || !name.value || !realm.value)
+
+const isConfirmed = ref(false)
 </script>
 
 <template>
@@ -23,15 +25,14 @@ const disabled = computed(() => status.value === 'pending' || !name.value || !re
       </v-col>
     </v-row>
 
-
     <div class="mt-4">
       <wow-profile v-if="data" :media="data.media" :profile="data.profile">
-        <div class="card-confirmation">
+        <div v-if="!isConfirmed" class="card-confirmation">
           <div class="prompt">Это тот персонаж?</div>
-          <div class="actions">
-            <v-btn width="128" height="64" color="error">Нет</v-btn>
-            <v-btn width="128" height="64" color="success">Да</v-btn>
-          </div>
+          <v-btn width="128" height="64" color="success" @click="isConfirmed = true">Да</v-btn>
+        </div>
+        <div v-else>
+
         </div>
       </wow-profile>
     </div>
@@ -45,15 +46,10 @@ const disabled = computed(() => status.value === 'pending' || !name.value || !re
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 8px;
 
   .prompt {
     font-size: 2em;
-  }
-
-  .actions {
-    display: flex;
-    margin-top: 8px;
-    gap: 16px;
   }
 }
 </style>
