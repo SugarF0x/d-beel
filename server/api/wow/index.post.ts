@@ -1,5 +1,6 @@
 import { z } from "zod"
-import { WowEncounter, WowRating } from "~/server/ydb/tables/wow_post"
+import { WowRating } from "~/server/ydb/tables/wow_post"
+import { WowEncounter } from "~/server/ydb/types/wow/encounter"
 import { TypedValues } from "ydb-sdk"
 import getCharacterInfo from "~/server/utils/wow/getCharacterInfo"
 

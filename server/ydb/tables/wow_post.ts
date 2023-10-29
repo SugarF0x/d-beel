@@ -1,18 +1,10 @@
 import { WowCharacterMediaResponse, WowCharacterProfileResponse } from "~/server/ydb/types/wow/blizzApiResponse"
+import { WowEncounter } from "~/server/ydb/types/wow/encounter"
 
 export enum WowRating {
   GOOD = 'GOOD',
   BAD = 'BAD',
   NEUTRAL = 'NEUTRAL',
-}
-
-export enum WowEncounter {
-  KEY = 'KEY',
-  RAID = 'RAID',
-  BATTLEGROUND = 'BATTLEGROUND',
-  ARENA = 'ARENA',
-  WORLD = 'WORLD',
-  OTHER = 'OTHER',
 }
 
 export const createWowPostTableQuery = `
