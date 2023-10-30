@@ -11,14 +11,14 @@ const props = withDefaults(defineProps<{
   rating: WowRating.NEUTRAL
 })
 
-const backgroundImage = computed(() => `linear-gradient(transparent, #0008), url('/img/wow/profile/background/${props.rating.toLowerCase()}.jpg')`)
+const backgroundImage = computed(() => `url('${props.media.fullSize}'), linear-gradient(transparent, #0008), url('/img/wow/profile/background/${props.rating.toLowerCase()}.jpg')`)
 </script>
 
 <template>
   <v-card class="vars wow-profile-card">
     <div class="preview" :style="{ backgroundImage }">
       <v-img :src="`/img/wow/factions/${props.profile.faction.toLowerCase()}/logo.png`" class="faction-logo" />
-      <v-img :src="props.media.fullSize" class="image" />
+      <div class="image" :style="{ backgroundImage: `url('${props.media.fullSize}')` }" />
     </div>
 
     <v-divider vertical />
@@ -57,7 +57,6 @@ const backgroundImage = computed(() => `linear-gradient(transparent, #0008), url
 
 .image {
   flex: 1;
-  transform: scale(3.5);
   aspect-ratio: .5;
 }
 
