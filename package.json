@@ -2,6 +2,7 @@
   "name": "nuxt-app",
   "private": true,
   "type": "module",
+  "web-types": "./web-types.json",
   "scripts": {
     "build": "nuxt build --dotenv .env.prod",
     "bd": "yarn build && yarn deploy",
@@ -44,6 +45,7 @@
     "fuse.js": "^6.6.2",
     "lodash-es": "^4.17.21",
     "next-auth": "^4.22.1",
+    "vue-masonry": "^0.16.0",
     "ydb-sdk": "^4.6.0",
     "zod": "^3.21.4"
   }
