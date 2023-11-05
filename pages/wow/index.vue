@@ -60,7 +60,7 @@ const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.valu
   >
     <v-container v-if="posts.length" >
       <v-row v-masonry transition-duration="0" item-selector=".item">
-        <v-col v-masonry-tile v-for="post in posts" :key="post.created_at" class="item" cols="12" sm="6" >
+        <v-col v-masonry-tile v-for="post in posts" :key="post.created_at" class="item" cols="12" lg="6" xl="4" >
           <wow-profile v-bind="post" >
             <table>
               <tr>

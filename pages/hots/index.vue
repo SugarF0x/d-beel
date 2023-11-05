@@ -77,7 +77,7 @@ function updateReaction(props: { emoji: string, add: boolean, username: string, 
   >
     <v-container :class="{ loading: pending }">
       <v-row v-masonry transition-duration="0" item-selector=".item">
-        <v-col v-masonry-tile v-for="post in posts" :key="`${post.username}-${post.created_at}`" class="item" cols="12" sm="4" >
+        <v-col v-masonry-tile v-for="post in posts" :key="`${post.username}-${post.created_at}`" class="item" cols="12" sm="6" lg="4" xl="3" >
           <hots-post v-bind="post" @reaction-update="updateReaction" />
         </v-col>
       </v-row>
