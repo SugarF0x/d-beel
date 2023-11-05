@@ -44,24 +44,9 @@ onSuspenseRerender(() => { status.value === "idle" && execute() })
 
 const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.value.totalPosts / POSTS_PER_PAGE)) ?? 0))
 
-const breakpoints = useBreakpoints({
-  1: 0,
-  2: 600,
-  3: 960,
-  4: 1920,
-}).current()
-
 const posts = computed<HotsPost[]>(() => {
   if (!data.value) return []
-
-  const columns = breakpoints.value.length
-  return data.value.posts.reduce(
-    (acc, val, index) => {
-      acc[index % columns].push(val)
-      return acc
-    },
-    Array.from({ length: columns }, () => []) as HotsPost[][]
-  ).flat()
+  return data.value.posts
 })
 
 function updateReaction(props: { emoji: string, add: boolean, username: string, created_at: string }) {
@@ -90,8 +75,12 @@ function updateReaction(props: { emoji: string, add: boolean, username: string, 
     create-url="/hots/create"
     @search="search"
   >
-    <v-container class="grid-container" :class="{ loading: pending }">
-      <hots-post v-for="post in posts" :key="`${post.username}-${post.created_at}`" v-bind="post" @reaction-update="updateReaction" />
+    <v-container :class="{ loading: pending }">
+      <v-row v-masonry transition-duration="0" item-selector=".item">
+        <v-col v-masonry-tile v-for="post in posts" :key="`${post.username}-${post.created_at}`" class="item" cols="12" sm="4" >
+          <hots-post v-bind="post" @reaction-update="updateReaction" />
+        </v-col>
+      </v-row>
     </v-container>
   </app-pagination>
 </template>
@@ -99,31 +88,5 @@ function updateReaction(props: { emoji: string, add: boolean, username: string, 
 <style scoped lang="scss">
 .loading {
   opacity: .5
-}
-
-.grid-container {
-  columns: 1;
-
-  @media only screen and (min-width: 600px) {
-    columns: 2;
-  }
-
-  @media only screen and (min-width: 960px) {
-    columns: 3;
-  }
-
-  @media only screen and (min-width: 1920px) {
-    columns: 4;
-  }
-
-  column-gap: 20px;
-
-  & > div {
-    &:not(:first-child) {
-      margin-top: 20px;
-    }
-
-    break-inside: avoid;
-  }
 }
 </style>
