@@ -3,7 +3,6 @@ import saveRouteParams from "~/utils/router/saveRouteParams"
 import { format } from "date-fns"
 import { encounterToLocaleMap } from "~/server/ydb/types/wow/encounter"
 import { WowPost } from "~/server/api/wow/index.get"
-import { HotsPost } from "~/server/api/hots/index.get"
 
 definePageMeta({ layout: 'wow' })
 useHead({ title: 'Дебилы варика' })
@@ -40,23 +39,9 @@ function search() {
   execute()
 }
 
-const breakpoints = useBreakpoints({
-  1: 0,
-  2: 960,
-  3: 1920,
-}).current()
-
 const posts = computed<WowPost[]>(() => {
   if (!data.value) return []
-
-  const columns = breakpoints.value.length
-  return data.value.posts.reduce(
-    (acc, val, index) => {
-      acc[index % columns].push(val)
-      return acc
-    },
-    Array.from({ length: columns }, () => []) as WowPost[][]
-  ).flat()
+  return data.value.posts
 })
 
 onSuspenseRerender(() => { status.value === "idle" && execute() })
@@ -73,33 +58,37 @@ const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.valu
     create-url="/wow/create"
     @search="search"
   >
-    <v-container v-if="posts.length" class="grid-container" >
-      <wow-profile v-for="post in posts" :key="post.created_at" v-bind="post" >
-        <table>
-          <tr>
-            <td>Автор</td>
-            <td>{{ post.created_by }}</td>
-          </tr>
-          <tr>
-            <td>Дата публикации</td>
-            <td>{{ format(new Date(post.created_at), 'dd.MM.yyyy') }}</td>
-          </tr>
-          <tr>
-            <td>Место встречи</td>
-            <td>{{ encounterToLocaleMap[post.encounter] }}</td>
-          </tr>
-          <tr v-if="post.encounter_details">
-            <td>Подробности</td>
-            <td>{{ post.encounter_details }}</td>
-          </tr>
-        </table>
+    <v-container v-if="posts.length" >
+      <v-row v-masonry transition-duration="0" item-selector=".item">
+        <v-col v-masonry-tile v-for="post in posts" :key="post.created_at" class="item" cols="12" sm="6" >
+          <wow-profile v-bind="post" >
+            <table>
+              <tr>
+                <td>Автор</td>
+                <td>{{ post.created_by }}</td>
+              </tr>
+              <tr>
+                <td>Дата публикации</td>
+                <td>{{ format(new Date(post.created_at), 'dd.MM.yyyy') }}</td>
+              </tr>
+              <tr>
+                <td>Место встречи</td>
+                <td>{{ encounterToLocaleMap[post.encounter] }}</td>
+              </tr>
+              <tr v-if="post.encounter_details">
+                <td>Подробности</td>
+                <td>{{ post.encounter_details }}</td>
+              </tr>
+            </table>
 
-        <v-divider class="divider" />
+            <v-divider class="divider" />
 
-        <div>
-          {{ post.comment }}
-        </div>
-      </wow-profile>
+            <div>
+              {{ post.comment }}
+            </div>
+          </wow-profile>
+        </v-col>
+      </v-row>
     </v-container>
   </app-pagination>
 </template>
@@ -107,27 +96,5 @@ const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.valu
 <style scoped lang="scss">
 .divider {
   margin: 12px 0;
-}
-
-.grid-container {
-  columns: 1;
-
-  @media only screen and (min-width: 960px) {
-    columns: 2;
-  }
-
-  @media only screen and (min-width: 1920px) {
-    columns: 3;
-  }
-
-  column-gap: 20px;
-
-  & > div {
-    &:not(:first-child) {
-      margin-top: 20px;
-    }
-
-    break-inside: avoid;
-  }
 }
 </style>
