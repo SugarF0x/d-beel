@@ -11,26 +11,29 @@ const props = withDefaults(defineProps<{
   rating: WowRating.NEUTRAL
 })
 
-const backgroundImage = computed(() => `url('${props.media.fullSize}'), linear-gradient(transparent, #0008), url('/img/wow/profile/background/${props.rating.toLowerCase()}.jpg')`)
+const backgroundImage = computed(() => `url('${props.media.fullSize}'), linear-gradient(#000, #0003), url('/img/wow/profile/background/${props.rating.toLowerCase()}.jpg')`)
 </script>
 
 <template>
-  <v-card class="vars wow-profile-card">
-    <div class="preview" :style="{ backgroundImage }">
-      <v-img :src="`/img/wow/factions/${props.profile.faction.toLowerCase()}/logo.png`" class="faction-logo" />
-      <div class="image" :style="{ backgroundImage: `url('${props.media.fullSize}')` }" />
+  <v-card class="vars wow-profile-card" >
+    <div class="header">
+      <div class="preview" :style="{ backgroundImage }" />
+
+      <div class="info">
+        <h3 :style="{ color: WowClassToColorMap[profile.class] }">{{ profile.fullName }}</h3>
+        <h5 v-if="profile.guild" class="guild">&lt;{{ profile.guild }}&gt;</h5>
+      </div>
+
+<!--      <div class="content">-->
+<!--        <h5 :style="{ color: WowClassToColorMap[profile.class] }">{{ profile.level }} ({{ profile.itemLevel }}) {{ profile.race }} {{ profile.class }} ({{ profile.spec }})</h5>-->
+<!--        <slot name="header" />-->
+<!--      </div>-->
     </div>
 
-    <v-divider vertical />
+    <v-divider />
 
     <div class="content">
-      <h3>{{ profile.fullName }}</h3>
-      <h5 :style="{ color: WowClassToColorMap[profile.class] }">{{ profile.level }} ({{ profile.itemLevel }}) {{ profile.race }} {{ profile.class }} ({{ profile.spec }})</h5>
-      <h6 v-if="profile.guild" class="guild">&lt;{{ profile.guild }}&gt;</h6>
-      <v-divider class="content-divider" />
-      <div class="slot">
-        <slot />
-      </div>
+      <slot name="default" />
     </div>
   </v-card>
 </template>
@@ -41,52 +44,27 @@ const backgroundImage = computed(() => `url('${props.media.fullSize}'), linear-g
   --faction-logo-size: 64px;
 }
 
-.wow-profile-card {
-  display: flex;
+.header {
+  aspect-ratio: 230/116;
 }
 
 .preview {
-  display: flex;
-  flex-direction: column;
-  flex: .5;
-  position: relative;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center center;
+  height: 100%;
+  background-size: 200%;
+  background-position: center 25%;
 }
 
-.image {
-  flex: 1;
-  aspect-ratio: .5;
-}
-
-.content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+.info {
   padding: var(--content-padding);
-}
-
-.faction-logo {
   position: absolute;
-  width: var(--faction-logo-size);
-  height: var(--faction-logo-size);
-  top: var(--content-padding);
-  right: var(--content-padding);
+  top: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .guild {
   opacity: .5;
-}
-
-.slot {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  margin-top: var(--content-padding);
-}
-
-.content-divider {
-  margin-top: calc(var(--content-padding) / 2);
 }
 </style>
