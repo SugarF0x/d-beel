@@ -75,14 +75,12 @@ const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.valu
               </table>
             </template>
 
-            <div>
-              {{ post.comment }}
+            {{ post.comment }}
 
-              <div>
-                &copy; {{ post.created_by }}
-                <br>
-                {{ format(new Date(post.created_at), 'dd.MM.yyyy') }}
-              </div>
+            <div class="author">
+              &copy; {{ post.created_by }}
+              <br>
+              {{ format(new Date(post.created_at), 'dd.MM.yyyy') }}
             </div>
           </wow-profile>
         </v-col>
@@ -94,5 +92,13 @@ const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.valu
 <style scoped lang="scss">
 .divider {
   margin: 12px 0;
+}
+
+.author {
+  margin-top: 4px;
+  text-align: right;
+  opacity: .5;
+  font-style: italic;
+  line-height: 1;
 }
 </style>
