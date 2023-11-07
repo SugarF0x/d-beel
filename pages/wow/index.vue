@@ -62,29 +62,27 @@ const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.valu
       <v-row v-masonry transition-duration="0" item-selector=".item">
         <v-col v-masonry-tile v-for="post in posts" :key="post.created_at" class="item" cols="12" lg="6" xl="4" >
           <wow-profile v-bind="post" >
-            <table>
-              <tr>
-                <td>Автор</td>
-                <td>{{ post.created_by }}</td>
-              </tr>
-              <tr>
-                <td>Дата публикации</td>
-                <td>{{ format(new Date(post.created_at), 'dd.MM.yyyy') }}</td>
-              </tr>
-              <tr>
-                <td>Место встречи</td>
-                <td>{{ encounterToLocaleMap[post.encounter] }}</td>
-              </tr>
-              <tr v-if="post.encounter_details">
-                <td>Подробности</td>
-                <td>{{ post.encounter_details }}</td>
-              </tr>
-            </table>
-
-            <v-divider class="divider" />
+            <template #header>
+              <table>
+                <tr>
+                  <td>Место встречи</td>
+                  <td>{{ encounterToLocaleMap[post.encounter] }}</td>
+                </tr>
+                <tr v-if="post.encounter_details">
+                  <td>Подробности</td>
+                  <td>{{ post.encounter_details }}</td>
+                </tr>
+              </table>
+            </template>
 
             <div>
               {{ post.comment }}
+
+              <div>
+                &copy; {{ post.created_by }},
+                <br>
+                {{ format(new Date(post.created_at), 'dd.MM.yyyy') }}
+              </div>
             </div>
           </wow-profile>
         </v-col>

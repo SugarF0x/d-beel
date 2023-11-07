@@ -16,18 +16,16 @@ const backgroundImage = computed(() => `url('${props.media.fullSize}'), linear-g
 
 <template>
   <v-card class="vars wow-profile-card" >
-    <div class="header">
-      <div class="preview" :style="{ backgroundImage }" />
-
+    <div class="header" :style="{ backgroundImage }" >
       <div class="info">
         <h3 :style="{ color: WowClassToColorMap[profile.class] }">{{ profile.fullName }}</h3>
         <h5 v-if="profile.guild" class="guild">&lt;{{ profile.guild }}&gt;</h5>
       </div>
 
-<!--      <div class="content">-->
-<!--        <h5 :style="{ color: WowClassToColorMap[profile.class] }">{{ profile.level }} ({{ profile.itemLevel }}) {{ profile.race }} {{ profile.class }} ({{ profile.spec }})</h5>-->
-<!--        <slot name="header" />-->
-<!--      </div>-->
+      <div class="spec">
+        <h5 :style="{ color: WowClassToColorMap[profile.class] }">{{ profile.level }} ({{ profile.itemLevel }}) {{ profile.race }} {{ profile.class }} ({{ profile.spec }})</h5>
+        <slot name="header" />
+      </div>
     </div>
 
     <v-divider />
@@ -46,22 +44,21 @@ const backgroundImage = computed(() => `url('${props.media.fullSize}'), linear-g
 
 .header {
   aspect-ratio: 230/116;
-}
-
-.preview {
   height: 100%;
   background-size: 200%;
   background-position: center 25%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .info {
   padding: var(--content-padding);
-  position: absolute;
-  top: 0;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  text-align: center;
+}
+
+.spec {
+  padding: var(--content-padding);
 }
 
 .guild {
