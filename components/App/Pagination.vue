@@ -24,8 +24,8 @@ const params = useUrlSearchParams<{ page: string, username: string }>('history',
 })
 
 onMounted(() => {
-  emit('update:page', parseInt(params.page))
-  emit('update:input', params.username)
+  emit('update:page', parseInt(params.page) ?? 1)
+  emit('update:input', params.username ?? '')
 })
 
 watch(() => props.input, value => { params.username = value })
