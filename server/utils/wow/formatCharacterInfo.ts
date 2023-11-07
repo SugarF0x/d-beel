@@ -1,5 +1,6 @@
 import { WowCharacterMediaResponse, WowCharacterProfileResponse, WowProfileFaction, WowProfileGender } from "~/server/ydb/types/wow/blizzApiResponse"
 import { WowClass } from "~/server/ydb/types/wow/class"
+import { WowRace } from "~/server/ydb/types/wow/race"
 
 export interface WowCharacterProfile {
   spec: string
@@ -12,7 +13,7 @@ export interface WowCharacterProfile {
   guild?: string
   level: number
   id: number
-  race: string
+  race: WowRace
 }
 
 export interface WowCharacterMedia {

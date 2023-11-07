@@ -1,4 +1,5 @@
 import { WowClass } from "~/server/ydb/types/wow/class"
+import { WowRace } from "~/server/ydb/types/wow/race"
 
 export interface RealmQueryResponse {
   realms: Array<{
@@ -26,7 +27,7 @@ export interface WowCharacterProfileResponse {
   faction: { type: WowProfileFaction, name: string }
   gender: { type: WowProfileGender, name: string }
   guild?: { name: string }
-  race: { name: string }
+  race: { name: WowRace }
   level: number
   id: number
   name: string
