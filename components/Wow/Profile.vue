@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { WowCharacterMedia, WowCharacterProfile } from "~/server/utils/wow/formatCharacterInfo"
 import { WowClassToColorMap } from "~/server/ydb/types/wow/class"
+import { WowRace } from "~/server/ydb/types/wow/race"
 import { WowRating } from "~/server/ydb/tables/wow_post"
 
 const props = withDefaults(defineProps<{
@@ -11,12 +12,19 @@ const props = withDefaults(defineProps<{
   rating: WowRating.NEUTRAL
 })
 
+const backgroundPositionY = computed(() => {
+  switch (props.profile.race) {
+    case WowRace.VULPERA: return '50%'
+    default: return '25%'
+  }
+})
+
 const backgroundImage = computed(() => `url('${props.media.fullSize}'), linear-gradient(#000, #0003), url('/img/wow/profile/background/${props.rating.toLowerCase()}.jpg')`)
 </script>
 
 <template>
   <v-card class="vars wow-profile-card" >
-    <div class="header" :style="{ backgroundImage }" >
+    <div class="header" :style="{ backgroundImage, backgroundPositionY }" >
       <div class="info">
         <h3 :style="{ color: WowClassToColorMap[profile.class] }">{{ profile.fullName }}</h3>
         <h5 v-if="profile.guild" class="guild">&lt;{{ profile.guild }}&gt;</h5>
@@ -46,7 +54,7 @@ const backgroundImage = computed(() => `url('${props.media.fullSize}'), linear-g
   aspect-ratio: 230/116;
   height: 100%;
   background-size: 200%;
-  background-position: center 25%;
+  background-position-x: center;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

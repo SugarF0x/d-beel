@@ -79,7 +79,7 @@ const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.valu
               {{ post.comment }}
 
               <div>
-                &copy; {{ post.created_by }},
+                &copy; {{ post.created_by }}
                 <br>
                 {{ format(new Date(post.created_at), 'dd.MM.yyyy') }}
               </div>
