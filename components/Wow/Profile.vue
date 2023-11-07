@@ -20,20 +20,19 @@ const backgroundPositionY = computed(() => {
 })
 
 const backgroundImage = computed(() => `url('${props.media.fullSize}'), linear-gradient(#000, #0003), url('/img/wow/profile/background/${props.rating.toLowerCase()}.jpg')`)
+const classColor = computed(() => WowClassToColorMap[props.profile.class])
 </script>
 
 <template>
   <v-card class="vars wow-profile-card" >
     <div class="header" :style="{ backgroundImage, backgroundPositionY }" >
       <div class="info">
-        <h3 :style="{ color: WowClassToColorMap[profile.class] }">{{ profile.fullName }}</h3>
+        <h3 class="name">{{ profile.fullName }}</h3>
+        <h4 class="spec">{{ profile.level }} ({{ profile.itemLevel }}) {{ profile.race }} {{ profile.class }} ({{ profile.spec }})</h4>
         <h5 v-if="profile.guild" class="guild">&lt;{{ profile.guild }}&gt;</h5>
       </div>
 
-      <div class="spec">
-        <h5 :style="{ color: WowClassToColorMap[profile.class] }">{{ profile.level }} ({{ profile.itemLevel }}) {{ profile.race }} {{ profile.class }} ({{ profile.spec }})</h5>
-        <slot name="header" />
-      </div>
+      <slot name="header" />
     </div>
 
     <v-divider />
@@ -65,11 +64,15 @@ const backgroundImage = computed(() => `url('${props.media.fullSize}'), linear-g
   text-align: center;
 }
 
-.spec {
-  padding: var(--content-padding);
+.guild, .spec {
+  opacity: .5;
 }
 
-.guild {
-  opacity: .5;
+.name, .spec {
+  color: v-bind(classColor);
+}
+
+.content {
+  padding: var(--content-padding);
 }
 </style>
