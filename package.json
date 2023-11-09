@@ -2,7 +2,6 @@
   "name": "nuxt-app",
   "private": true,
   "type": "module",
-  "web-types": "./web-types.json",
   "scripts": {
     "build": "nuxt build --dotenv .env.prod",
     "bd": "yarn build && yarn deploy",

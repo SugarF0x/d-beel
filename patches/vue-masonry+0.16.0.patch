@@ -1,0 +1,38 @@
+diff --git a/node_modules/vue-masonry/package.json b/node_modules/vue-masonry/package.json
+index cdcf519..9bfde31 100644
+--- a/node_modules/vue-masonry/package.json
++++ b/node_modules/vue-masonry/package.json
+@@ -3,6 +3,7 @@
+   "version": "0.16.0",
+   "description": "masonry layout for vue.js",
+   "main": "src/masonry.plugin.js",
++  "web-types": "./web-types.json",
+   "scripts": {
+     "lint": "eslint --ext .js,.vue src",
+     "build": "webpack",
+diff --git a/node_modules/vue-masonry/web-types.json b/node_modules/vue-masonry/web-types.json
+new file mode 100644
+index 0000000..b0470f9
+--- /dev/null
++++ b/node_modules/vue-masonry/web-types.json
+@@ -0,0 +1,20 @@
++{
++  "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/v2-preview/web-types.json",
++  "name": "vue-masonry",
++  "framework": "vue",
++  "version": "0.16.0",
++  "contributions": {
++    "html": {
++      "vue-directives": [
++        {
++          "name": "masonry",
++          "description": "Masonry wrapper tile"
++        },
++        {
++          "name": "masonry-tile",
++          "description": "Masonry tile. To be wrapped with v-masonry"
++        }
++      ]
++    }
++  }
++}
