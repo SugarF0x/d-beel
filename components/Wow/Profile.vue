@@ -63,10 +63,14 @@ const classColor = computed(() => WowClassToColorMap[props.profile.class])
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  padding: var(--content-padding);
+
+  & > :deep(.no-pad) { margin: calc(var(--content-padding) * -1); }
+  & > :deep(.no-pad-x) { margin-left: calc(var(--content-padding) * -1); margin-right: calc(var(--content-padding) * -1); }
+  & > :deep(.no-pad-y) { margin-top: calc(var(--content-padding) * -1); margin-bottom: calc(var(--content-padding) * -1); }
 }
 
 .info {
-  padding: var(--content-padding);
   text-align: center;
 }
 
