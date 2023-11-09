@@ -70,6 +70,7 @@ const classColor = computed(() => WowClassToColorMap[props.profile.class])
 
 .name, .spec {
   color: v-bind(classColor);
+  line-height: 1.2;
 }
 
 .content {
