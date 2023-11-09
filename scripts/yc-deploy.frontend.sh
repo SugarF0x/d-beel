@@ -1,4 +1,4 @@
-source ./.env.cloud
+source ./env/.env.cloud
 
 aws --profile yandex \
   s3 --endpoint-url=https://storage.yandexcloud.net \
