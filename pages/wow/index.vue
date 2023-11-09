@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import saveRouteParams from "~/utils/router/saveRouteParams"
 import { format } from "date-fns"
-import { encounterToLocaleMap } from "~/server/ydb/types/wow/encounter"
+import { encounterToLocaleMap, WowEncounter } from "~/server/ydb/types/wow/encounter"
 import { WowPost } from "~/server/api/wow/index.get"
 
 definePageMeta({ layout: 'wow' })
@@ -62,17 +62,15 @@ const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.valu
       <v-row v-masonry transition-duration="0" item-selector=".item">
         <v-col v-masonry-tile v-for="post in posts" :key="post.created_at" class="item" cols="12" lg="6" xl="4" >
           <wow-profile v-bind="post" >
-            <template #header>
-              <table>
-                <tr>
-                  <td>Место встречи</td>
-                  <td>{{ encounterToLocaleMap[post.encounter] }}</td>
-                </tr>
-                <tr v-if="post.encounter_details">
-                  <td>Подробности</td>
-                  <td>{{ post.encounter_details }}</td>
-                </tr>
-              </table>
+            <template #header v-if="post.encounter_details || post.encounter !== WowEncounter.OTHER" >
+              <div class="post-details no-pad-x">
+                <span v-if="post.encounter !== WowEncounter.OTHER" class="encounter">
+                  [{{ encounterToLocaleMap[post.encounter] }}]
+                </span>
+                <span v-if="post.encounter_details" class="encounter-details">
+                  {{ post.encounter_details }}
+                </span>
+              </div>
             </template>
 
             {{ post.comment }}
@@ -100,5 +98,15 @@ const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.valu
   opacity: .5;
   font-style: italic;
   line-height: 1;
+}
+
+.post-details {
+  backdrop-filter: brightness(50%) blur(16px);
+  padding: 4px;
+  text-align: center;
+}
+
+.encounter {
+  opacity: .5;
 }
 </style>
