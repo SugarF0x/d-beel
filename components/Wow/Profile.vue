@@ -24,7 +24,7 @@ const classColor = computed(() => WowClassToColorMap[props.profile.class])
 </script>
 
 <template>
-  <v-card class="vars wow-profile-card" >
+  <v-card class="vars wow-profile-card" elevation="12" >
     <div class="header" :style="{ backgroundImage, backgroundPositionY }" >
       <div class="info">
         <h3 class="name">{{ profile.fullName }}</h3>
@@ -47,6 +47,12 @@ const classColor = computed(() => WowClassToColorMap[props.profile.class])
 .vars {
   --content-padding: 8px;
   --faction-logo-size: 64px;
+  --border-color: rgb(57, 57, 59)
+}
+
+.wow-profile-card {
+  border: 1px solid var(--border-color);
+  background-color: rgb(39, 40, 42);
 }
 
 .header {
