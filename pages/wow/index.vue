@@ -75,11 +75,11 @@ const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.valu
 
             {{ post.comment }}
 
-            <div class="author">
+            <span class="author">
               &copy; {{ post.created_by }}
               <br>
               {{ format(new Date(post.created_at), 'dd.MM.yyyy') }}
-            </div>
+            </span>
           </wow-profile>
         </v-col>
       </v-row>
@@ -93,11 +93,12 @@ const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.valu
 }
 
 .author {
-  margin-top: 4px;
   text-align: right;
   opacity: .5;
   font-style: italic;
   line-height: 1;
+  padding: 8px;
+  float: right;
 }
 
 .post-details {
