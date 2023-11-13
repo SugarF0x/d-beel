@@ -80,7 +80,7 @@ const isLoading = computed(() => status.value === 'pending')
 
     <v-window-item :value="2">
       <v-container class="hots-post-creation-container align-center">
-        <hots-post
+        <hots-publication
           :hero="hero ?? null"
           :comment="comment"
           :rating="rating"
