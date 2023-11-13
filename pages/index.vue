@@ -19,12 +19,16 @@ const modules = ['hots', 'wow']
       <v-btn @click="handleAuth">{{ authButtonText }}</v-btn>
     </nav>
 
-    <h1>Дебильные модули:</h1>
-    <div class="modules-container">
+    <div class="title">
+      <h1>Реестр дебилов</h1>
+      <h2>По версии #фрупывке</h2>
+    </div>
+
+    <v-container class="container">
       <app-card-tilt v-for="module of modules" :key="module" @click="navigateTo(`/${module}`)">
         <v-img :src="`/img/${module}/logo.png`" width="128" height="128" />
       </app-card-tilt>
-    </div>
+    </v-container>
   </div>
 </template>
 
@@ -33,10 +37,7 @@ const modules = ['hots', 'wow']
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   overflow: hidden;
-  gap: 24px;
 
   nav {
     position: absolute;
@@ -45,6 +46,25 @@ const modules = ['hots', 'wow']
     display: flex;
     flex-direction: row;
     gap: 8px;
+  }
+}
+
+.container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 96px;
+
+  h2 {
+    opacity: .5;
   }
 }
 
