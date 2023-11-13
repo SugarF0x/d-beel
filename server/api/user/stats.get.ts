@@ -26,12 +26,17 @@ export default defineEventHandler(async (event) => {
     const { resultSets: postsResultSets } = await session.executeQuery(`
       DECLARE $author AS Utf8;
 
-      SELECT SUM(total_posts) FROM (${tablesToCount.map(getTableCountQuery).join(' UNION ALL ')});
+      SELECT SUM(total_posts)
+      AS total_posts 
+      FROM (
+        ${tablesToCount.map(getTableCountQuery).join(' UNION ALL ')}
+      );
     `, filterOptionalQueryParams({
       "$author": utf8(username)
     }))
 
     const results = TypedData.createNativeObjects(postsResultSets[0]) as unknown as Array<{ total_posts: number }>
+    return results[0].total_posts
   })
 
   return {
