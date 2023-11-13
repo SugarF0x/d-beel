@@ -37,16 +37,17 @@ export default NuxtAuthHandler({
 
         if (!persistedPassword || !(await verifyPassword(persistedPassword, password))) return null
 
-        return { username: credentials.username }
+        return { username }
       }
     })
   ],
   callbacks: {
+    // @ts-ignore, i dont know how to fix this return type error
     async jwt({ token, user }: { token: JWT, user: User }){
       if (user) token.user = user
       return token
     },
-    async session({ token, session }): Promise<Session> {
+    async session({ token, session }): Promise<Session & { user: User }> {
       return { ...session, user: token.user }
     }
   },

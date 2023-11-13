@@ -1,29 +1,28 @@
 import "next-auth"
 import "next-auth/jwt"
+import { JWT as NativeJWT } from "next-auth/jwt"
 
-type User = {
+interface AppUser {
   username: string
 }
 
-// TODO: figure this out since this is obviously not working out
-
 declare module "next-auth" {
-  export type User = User
+  export type User = AppUser
   export interface Session {
     user: User
   }
 }
 
 declare module "next-auth/jwt" {
-  export interface JWT {
-    user: User
+  export interface JWT extends NativeJWT {
+    user: AppUser
   }
 }
 
 declare global {
   namespace inspector {
     interface Session {
-      user: User
+      user: AppUser
     }
   }
 }
