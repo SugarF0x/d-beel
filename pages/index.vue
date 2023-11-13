@@ -1,6 +1,8 @@
 <script setup lang="ts">
 const { data, signOut } = useAuth()
-const authButtonText = computed(() => !data.value ? 'Войти' : 'Выйти')
+const username = computed(() => data.value?.user?.username)
+
+const authButtonText = computed(() => !username.value ? 'Войти' : 'Выйти')
 
 function handleAuth() {
   if (!data.value) navigateTo('/login')
@@ -12,7 +14,10 @@ const modules = ['hots', 'wow']
 
 <template>
   <div class="wrapper">
-    <v-btn class="auth-button" @click="handleAuth">{{ authButtonText }}</v-btn>
+    <nav>
+      <v-btn v-if="username" :to="`/profile/${username}`">Профиль</v-btn>
+      <v-btn @click="handleAuth">{{ authButtonText }}</v-btn>
+    </nav>
 
     <h1>Дебильные модули:</h1>
     <div class="modules-container">
@@ -32,6 +37,15 @@ const modules = ['hots', 'wow']
   align-items: center;
   overflow: hidden;
   gap: 24px;
+
+  nav {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+  }
 }
 
 .modules-container {
@@ -40,11 +54,5 @@ const modules = ['hots', 'wow']
   justify-content: center;
   align-items: center;
   gap: 24px;
-}
-
-.auth-button {
-  position: absolute;
-  top: 24px;
-  right: 24px;
 }
 </style>
