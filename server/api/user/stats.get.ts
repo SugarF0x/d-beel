@@ -1,12 +1,10 @@
 import { z } from "zod"
-import { TypedData, TypedValues } from "ydb-sdk"
+import { TypedValues } from "ydb-sdk"
 
 const { utf8 } = TypedValues
 
 // TODO: add side effects to db interactions that would bump personal stats
 //  instead of having to recount everything every time this route is queried
-
-// TODO: create typed query execution util to streamline createNativeObjects & type cast
 
 function getTableCountQuery(table: string): string {
   return `SELECT COUNT(*) AS total_posts FROM ${table} WHERE created_by = $author`
@@ -23,7 +21,7 @@ export default defineEventHandler(async (event) => {
   }))
 
   const totalPosts = await useYDBSession(async session => {
-    const { resultSets: postsResultSets } = await session.executeQuery(`
+    const response = await ydbGet<{ total_posts: number }>(session, `
       DECLARE $author AS Utf8;
 
       SELECT SUM(total_posts)
@@ -31,12 +29,14 @@ export default defineEventHandler(async (event) => {
       FROM (
         ${tablesToCount.map(getTableCountQuery).join(' UNION ALL ')}
       );
-    `, filterOptionalQueryParams({
+    `, {
       "$author": utf8(username)
-    }))
+    })
 
-    const results = TypedData.createNativeObjects(postsResultSets[0]) as unknown as Array<{ total_posts: number }>
-    return results[0].total_posts
+    const results = response[0]?.total_posts
+    if (results === undefined) throw new Error('Malformed query response: total posts missing')
+
+    return results
   })
 
   return {

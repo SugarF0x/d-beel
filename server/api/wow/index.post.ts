@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
   const { profile, media } = await getCharacterInfo(name, realm)
 
   await useYDBSession(async (session) => {
-    await session.executeQuery(`
+    await ydbPost(session, `
       DECLARE $name AS Utf8;
       DECLARE $realm AS Utf8;
       DECLARE $created_at AS Datetime;
@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
       
       INSERT INTO wow_post (name, realm, created_at, id, profile, media, created_by, rating, comment, encounter, encounter_details)
       VALUES ($name, $realm, $created_at, $id, $profile, $media, $created_by, $rating, $comment, $encounter, $encounter_details);
-    `, filterOptionalQueryParams({
+    `, {
       "$name": utf8(name),
       "$realm": utf8(realm),
       "$created_at": datetime(new Date()),
@@ -48,7 +48,7 @@ export default defineEventHandler(async (event) => {
       "$comment": utf8(comment),
       "$encounter": utf8(encounter),
       "$encounter_details": encounterDetails && optional(utf8(encounterDetails)),
-    }))
+    })
   })
 
   return true

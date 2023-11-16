@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
   }))
 
   await useYDBSession(async (session) => {
-    await session.executeQuery(`
+    await ydbPost(session, `
       DECLARE $username AS Utf8;
       DECLARE $created_at AS Datetime;
       DECLARE $comment AS Utf8;
@@ -25,14 +25,14 @@ export default defineEventHandler(async (event) => {
       
       INSERT INTO hots_post (username, created_at, comment, created_by, hero, rating)
       VALUES ($username, $created_at, $comment, $created_by, $hero, $rating);
-    `, filterOptionalQueryParams({
+    `, {
       "$username": utf8(username),
       "$created_at": datetime(new Date()),
       "$comment": utf8(comment),
       "$created_by": utf8(created_by),
       "$hero": hero && optional(utf8(hero)),
       "$rating": uint8(rating),
-    }))
+    })
   })
 
   return true

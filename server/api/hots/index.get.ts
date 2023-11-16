@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
   const offset = (page - 1) * postsPerPage
 
   return await useYDBSession(async (session): Promise<HotsPostGetResponse> => {
-    const { resultSets: postsResultSets } = await session.executeQuery(`
+    const hotsPostsResponse = await ydbGet<HotsPostRow & { total_posts: number }>(session, `
       DECLARE $offset AS Uint16;
       DECLARE $limit AS Uint16;
       DECLARE $username AS Utf8?;
@@ -36,34 +36,30 @@ export default defineEventHandler(async (event) => {
       WHERE IF($username is not NULL, Unicode::ToLower(hots_post.username) = Unicode::ToLower($username), true)
       ORDER BY created_at DESC
       LIMIT $offset, $limit;
-    `, filterOptionalQueryParams({
+    `, {
       "$offset": uint16(offset),
       "$limit": uint16(postsPerPage),
       "$username": username && optional(utf8(username))
-    }))
+    })
 
-    const results = TypedData.createNativeObjects(postsResultSets[0]) as unknown as Array<HotsPostRow & { total_posts: number }>
+    const totalPosts = hotsPostsResponse[0]?.total_posts ?? 0
+    const posts = hotsPostsResponse.map<HotsPostRow>(result => omit(result, 'total_posts'))
 
-    const totalPosts = results[0]?.total_posts ?? 0
-    const posts = results.map<HotsPostRow>(result => omit(result, 'total_posts'))
-
-    const { resultSets: reactionsResultSets } = await session.executeQuery(`
+    const hotsReactionsResponse = await ydbGet<HotsPostReactionRow>(session, `
       DECLARE $keys AS List<Tuple<Utf8, Datetime>>;
 
       SELECT * FROM hots_post_reaction
       WHERE AsTuple(post_username, post_created_at) IN $keys;
-    `, filterOptionalQueryParams({
+    `, {
       "$keys": list(
         Types.tuple(Types.UTF8, Types.DATETIME),
         posts.map(post => [post.username, new Date(post.created_at)])
       )
-    }))
-
-    const reactions = TypedData.createNativeObjects(reactionsResultSets[0]) as unknown as Array<HotsPostReactionRow>
+    })
 
     const keyToPostMap: Record<string, HotsPost> = Object.fromEntries(posts.map(post => [`${post.username}-${new Date(post.created_at).valueOf()}`, post]))
 
-    for (const reaction of reactions) {
+    for (const reaction of hotsReactionsResponse) {
       const key = `${reaction.post_username}-${reaction.post_created_at.valueOf()}`
       const post = keyToPostMap[key]
       post.reactions ??= {}

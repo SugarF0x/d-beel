@@ -40,19 +40,19 @@ async function handleReaction(event: H3Event, created_by: string) {
         AND shortcut = $reaction;
     `
 
-    await session.executeQuery(`
+    await ydbPost(session, `
       DECLARE $username AS Utf8;
       DECLARE $created_at AS Datetime;
       DECLARE $reaction AS Utf8;
       DECLARE $created_by AS Utf8;
       
       ${query}
-    `, filterOptionalQueryParams({
+    `, {
       "$username": TypedValues.utf8(username),
       "$created_at": TypedValues.datetime(new Date(created_at)),
       "$reaction": TypedValues.utf8(reaction),
       "$created_by": TypedValues.utf8(created_by)
-    }))
+    })
   })
 
   return true

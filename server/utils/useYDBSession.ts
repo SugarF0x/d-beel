@@ -16,12 +16,12 @@ export default async function <T = unknown>(callback: (session: Session) => Prom
   return result
 }
 
-export async function ydbSessionGet<T>(session: Session, query: string, params: Record<string, TypedValues | undefined>): Promise<T[]> {
+export async function ydbGet<T>(session: Session, query: string, params: Record<string, TypedValues | undefined>): Promise<T[]> {
   const { resultSets } = await session.executeQuery(query , filterOptionalQueryParams(params))
   return TypedData.createNativeObjects(resultSets[0]) as T[]
 }
 
-export async function ydbSessionPost(session: Session, query: string, params: Record<string, TypedValues | undefined>): Promise<void> {
+export async function ydbPost(session: Session, query: string, params: Record<string, TypedValues | undefined>): Promise<void> {
   await session.executeQuery(query , filterOptionalQueryParams(params))
   return
 }

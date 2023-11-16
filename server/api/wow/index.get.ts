@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
   const offset = (page - 1) * postsPerPage
 
   return await useYDBSession(async (session): Promise<WowPostGetResponse> => {
-    const { resultSets: postsResultSets } = await session.executeQuery(`
+    const response = await ydbGet<WowPostRow & { total_posts: number }>(session, `
       DECLARE $offset AS Uint16;
       DECLARE $limit AS Uint16;
       DECLARE $name AS Utf8?;
@@ -37,16 +37,14 @@ export default defineEventHandler(async (event) => {
       WHERE IF($name is not NULL, Unicode::ToLower(wow_post.name) = Unicode::ToLower($name), true)
       ORDER BY created_at DESC
       LIMIT $offset, $limit;
-    `, filterOptionalQueryParams({
+    `, {
       "$offset": uint16(offset),
       "$limit": uint16(postsPerPage),
       "$name": name && optional(utf8(name))
-    }))
+    })
 
-    const results = TypedData.createNativeObjects(postsResultSets[0]) as unknown as Array<WowPostRow & { total_posts: number }>
-
-    const totalPosts = results[0]?.total_posts ?? 0
-    const posts = results.map<WowPost>(post => ({
+    const totalPosts = response[0]?.total_posts ?? 0
+    const posts = response.map<WowPost>(post => ({
       ...omit(post, 'total_posts', 'profile', 'media'),
       ...formatCharacterInfo({ profile: JSON.parse(post.profile), media: JSON.parse(post.media) }),
     }))
