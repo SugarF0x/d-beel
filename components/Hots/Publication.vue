@@ -59,6 +59,10 @@ async function react(emoji: string) {
 
   isLoading.value = false
 }
+
+function gotoAuthor() {
+  if (props.created_by) navigateTo(`/profile/${props.created_by}`)
+}
 </script>
 
 <template>
@@ -71,7 +75,9 @@ async function react(emoji: string) {
         <table>
           <tr>
             <th>Автор</th>
-            <td>{{ created_by ?? "-" }}</td>
+            <td @click="gotoAuthor" :class="{ clickable: Boolean(created_by) }">
+              {{ created_by ?? "-" }}
+            </td>
           </tr>
           <tr>
             <th>Дата публикации</th>
@@ -99,7 +105,7 @@ async function react(emoji: string) {
         <button
           v-for="[shortcut, authors] of Object.entries(reactions ?? {})"
           :key="shortcut"
-          :class="{ authored: authors.includes(authData?.user.username), loading: isLoading }"
+          :class="{ authored: authors.includes(authData?.user?.username ?? ''), loading: isLoading }"
           :disabled="!authData || isLoading"
           class="reaction"
           @click="react(shortcut)"
@@ -271,5 +277,10 @@ async function react(emoji: string) {
         to(rgba(41,102,163,0))
     )
   }
+}
+
+.clickable {
+  user-select: none;
+  cursor: pointer;
 }
 </style>
