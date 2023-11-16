@@ -47,6 +47,10 @@ const posts = computed<WowPost[]>(() => {
 onSuspenseRerender(() => { status.value === "idle" && execute() })
 
 const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.value.totalPosts / POSTS_PER_PAGE)) ?? 0))
+
+function gotoAuthor(author: string) {
+  navigateTo(`/profile/${author}`)
+}
 </script>
 
 <template>
@@ -75,7 +79,7 @@ const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.valu
 
             {{ post.comment }}
 
-            <span class="author">
+            <span class="author" @click="gotoAuthor(post.created_by)">
               &copy; {{ post.created_by }}
               <br>
               {{ format(new Date(post.created_at), 'dd.MM.yyyy') }}
@@ -99,6 +103,8 @@ const totalPages = computed(() => Math.max(1, (data.value && Math.ceil(data.valu
   line-height: 1;
   padding: 8px;
   float: right;
+  user-select: none;
+  cursor: pointer;
 }
 
 .post-details {
