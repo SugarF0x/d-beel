@@ -15,6 +15,7 @@ const props = withDefaults(defineProps<{
 const backgroundPositionY = computed(() => {
   switch (props.profile.race) {
     case WowRace.VULPERA: return '50%'
+    case WowRace.DWARF: return '35%'
     default: return '25%'
   }
 })
