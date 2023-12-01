@@ -32,7 +32,7 @@ export default defineEventHandler(async (event) => {
       $username: utf8(username)
     })
 
-    if (!user) return createError({ status: 404 })
+    if (!user) throw createError({ status: 404 })
 
     const [{ totalPosts }] = await ydbGet<{ totalPosts: number }>(session, `
       DECLARE $author AS Utf8;

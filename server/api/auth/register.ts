@@ -4,21 +4,16 @@ import { z } from 'zod'
 const { utf8, datetime, uint16 } = TypedValues
 
 export default defineEventHandler(async (event) => {
-  const { username, password } = await getBodyPayload(event, z.object({
+  const { username, password, inviteCode } = await getBodyPayload(event, z.object({
     username: z.string().min(1),
     password: z.string().min(1),
+    inviteCode: z.string().min(1)
   }))
 
-  /*
-    TODO:
-      1. validate invite
-      2. validate name is available
-      3. create user & claim invite
-   */
-
+  if (await validateInvite(inviteCode)) throw createError({ statusCode: 401 })
   if (await doesUserAlreadyExist(username)) throw createError({ statusCode: 409 })
 
-  await createUser(username, password)
+  await createUser(username, password, inviteCode)
 
   return true
 })
@@ -54,25 +49,38 @@ async function doesUserAlreadyExist(username: string): Promise<boolean> {
   })
 }
 
-async function createUser(username: string, password: string) {
+async function createUser(username: string, password: string, key: string) {
   const { hash, salt, iterations } = await generateHashPassword(password)
 
   await useYDBSession(async (session) => {
-    await ydbPost(session, `
-      DECLARE $username AS Utf8;
-      DECLARE $created_at AS Datetime;
-      DECLARE $hash AS Utf8;
-      DECLARE $salt AS Utf8;
-      DECLARE $iterations AS Uint16;
-
-      INSERT INTO user (username, created_at, hash, salt, iterations) 
-      VALUES ($username, $created_at, $hash, $salt, $iterations);
-    `, {
-      "$username": utf8(username),
-      "$created_at": datetime(new Date()),
-      "$hash": utf8(hash),
-      "$salt": utf8(salt),
-      "$iterations": uint16(iterations),
-    })
+    return Promise.all([
+      ydbPost(session, `
+        DECLARE $key AS Utf8;
+        DECLARE $username AS Utf8;
+        
+        UPDATE user_invite
+        SET claimed_by = $username
+        WHERE key = $key;
+      `, {
+        $key: utf8(key),
+        $username: utf8(username)
+      }),
+      ydbPost(session, `
+        DECLARE $username AS Utf8;
+        DECLARE $created_at AS Datetime;
+        DECLARE $hash AS Utf8;
+        DECLARE $salt AS Utf8;
+        DECLARE $iterations AS Uint16;
+  
+        INSERT INTO user (username, created_at, hash, salt, iterations) 
+        VALUES ($username, $created_at, $hash, $salt, $iterations);
+      `, {
+        "$username": utf8(username),
+        "$created_at": datetime(new Date()),
+        "$hash": utf8(hash),
+        "$salt": utf8(salt),
+        "$iterations": uint16(iterations),
+      })
+    ])
   })
 }
