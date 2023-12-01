@@ -9,8 +9,12 @@ const callbackUrl = computed(() => {
   return typeof callbackUrlParam === "string" && callbackUrlParam.length > 0 ? callbackUrlParam : "/"
 })
 
+const tab = ref(0)
+const TABS = ['Вход', 'Регистрация']
+
 const username = ref('')
 const password = ref('')
+const inviteCode = ref('')
 
 const errorMessage = ref('')
 
@@ -39,14 +43,19 @@ async function register() {
       method: 'post',
       body: {
         username: username.value,
-        password: password.value
+        password: password.value,
+        inviteCode: inviteCode.value,
       }
     }).catch(error => {
       const statusCode = error.statusCode as number
 
-      (() => {
-        if (statusCode === 400) return errorMessage.value = 'Неправильный формат данных'
-        if (statusCode === 409) return errorMessage.value = 'Данный пользователь уже существует'
+      errorMessage.value = (() => {
+        switch (statusCode) {
+          case 400: return 'Неправильный формат данных'
+          case 403: return 'Неверный код приглашения'
+          case 409: return 'Данный пользователь уже существует'
+          default: return 'Неизвестная ошибка'
+        }
       })()
     })
 
@@ -57,35 +66,29 @@ async function register() {
 
 <template>
   <div class="wrapper">
-    <v-sheet width="300" class="card">
-      <div class="header">
-        <h1 class="title text-h2">Вход</h1>
-      </div>
+    <v-sheet class="card">
+      <v-tabs v-model="tab" color="deep-purple-accent-4" align-tabs="center" grow>
+        <v-tab v-for="tab in TABS" :value="tab">{{ tab }}</v-tab>
+      </v-tabs>
+      <v-window v-model="tab">
+        <v-window-item :value="TABS[0]">
+          <form>
+            <v-text-field v-model="username" label="Логин" placeholder="вася нагибатор 666" :error-messages="errorMessage" required />
+            <v-text-field v-model="password" type="password" label="Пароль" required />
 
-      <form>
-        <v-text-field
-          v-model="username"
-          label="Логин"
-          placeholder="вася нагибатор 666"
-          :error-messages="errorMessage"
-          required
-        />
+            <v-btn class="bg-primary" :loading="isLoading" @click="login">Войти</v-btn>
+          </form>
+        </v-window-item>
+        <v-window-item :value="TABS[1]">
+          <form>
+            <v-text-field v-model="username" label="Логин" placeholder="вася нагибатор 666" :error-messages="errorMessage" required />
+            <v-text-field v-model="password" type="password" label="Пароль" required />
+            <v-text-field v-model="inviteCode" label="Код приглашения" required />
 
-        <v-text-field
-          v-model="password"
-          type="password"
-          label="Пароль"
-          required
-        />
-
-        <v-btn class="bg-primary" :loading="isLoading" @click="login">
-          Войти
-        </v-btn>
-
-        <v-btn class="bg-secondary" :loading="isLoading" @click="register">
-          Зарегистрироваться
-        </v-btn>
-      </form>
+            <v-btn class="bg-secondary" :loading="isLoading" @click="register">Зарегистрироваться</v-btn>
+          </form>
+        </v-window-item>
+      </v-window>
     </v-sheet>
   </div>
 </template>
@@ -98,6 +101,7 @@ async function register() {
   align-items: center;
 
   form {
+    padding: 16px;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -117,7 +121,7 @@ async function register() {
 }
 
 .card {
-  padding: 16px;
   border-radius: 16px;
+  overflow: hidden;
 }
 </style>
