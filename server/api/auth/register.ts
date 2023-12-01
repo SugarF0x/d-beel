@@ -10,15 +10,15 @@ export default defineEventHandler(async (event) => {
     inviteCode: z.string().min(1)
   }))
 
-  if (await validateInvite(inviteCode)) throw createError({ statusCode: 401 })
-  if (await doesUserAlreadyExist(username)) throw createError({ statusCode: 409 })
+  if (!await isInviteValid(inviteCode)) throw createError({ statusCode: 403 })
+  if (!await isUsernameAvailable(username)) throw createError({ statusCode: 409 })
 
   await createUser(username, password, inviteCode)
 
   return true
 })
 
-async function validateInvite(key: string): Promise<boolean> | never {
+async function isInviteValid(key: string): Promise<boolean> | never {
   return useYDBSession(async session => {
     const [{ valid }] = await ydbGet<{ valid: boolean }>(session, `
       DECLARE $key AS Utf8;
@@ -35,7 +35,7 @@ async function validateInvite(key: string): Promise<boolean> | never {
   })
 }
 
-async function doesUserAlreadyExist(username: string): Promise<boolean> {
+async function isUsernameAvailable(username: string): Promise<boolean> {
   return await useYDBSession(async (session) => {
     const { resultSets } = await session.executeQuery(`
       DECLARE $username AS Utf8;
@@ -45,7 +45,7 @@ async function doesUserAlreadyExist(username: string): Promise<boolean> {
       "$username": utf8(username)
     })
 
-    return Boolean(TypedData.createNativeObjects(resultSets[0])[0].count)
+    return !Boolean(TypedData.createNativeObjects(resultSets[0])[0].count)
   })
 }
 
@@ -53,34 +53,33 @@ async function createUser(username: string, password: string, key: string) {
   const { hash, salt, iterations } = await generateHashPassword(password)
 
   await useYDBSession(async (session) => {
-    return Promise.all([
-      ydbPost(session, `
-        DECLARE $key AS Utf8;
-        DECLARE $username AS Utf8;
-        
-        UPDATE user_invite
-        SET claimed_by = $username
-        WHERE key = $key;
-      `, {
-        $key: utf8(key),
-        $username: utf8(username)
-      }),
-      ydbPost(session, `
-        DECLARE $username AS Utf8;
-        DECLARE $created_at AS Datetime;
-        DECLARE $hash AS Utf8;
-        DECLARE $salt AS Utf8;
-        DECLARE $iterations AS Uint16;
-  
-        INSERT INTO user (username, created_at, hash, salt, iterations) 
-        VALUES ($username, $created_at, $hash, $salt, $iterations);
-      `, {
-        "$username": utf8(username),
-        "$created_at": datetime(new Date()),
-        "$hash": utf8(hash),
-        "$salt": utf8(salt),
-        "$iterations": uint16(iterations),
-      })
-    ])
+    await ydbPost(session, `
+      DECLARE $key AS Utf8;
+      DECLARE $username AS Utf8;
+      
+      UPDATE user_invite
+      SET claimed_by = $username
+      WHERE key = $key;
+    `, {
+      $key: utf8(key),
+      $username: utf8(username)
+    })
+
+    await ydbPost(session, `
+      DECLARE $username AS Utf8;
+      DECLARE $created_at AS Datetime;
+      DECLARE $hash AS Utf8;
+      DECLARE $salt AS Utf8;
+      DECLARE $iterations AS Uint16;
+
+      INSERT INTO user (username, created_at, hash, salt, iterations) 
+      VALUES ($username, $created_at, $hash, $salt, $iterations);
+    `, {
+      "$username": utf8(username),
+      "$created_at": datetime(new Date()),
+      "$hash": utf8(hash),
+      "$salt": utf8(salt),
+      "$iterations": uint16(iterations),
+    })
   })
 }
