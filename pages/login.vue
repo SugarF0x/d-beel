@@ -1,92 +1,51 @@
 <script setup lang="ts">
-const { data, signIn } = useAuth()
+import { UserLogin } from "#components"
+
+const { data } = useAuth()
 const route = useRoute()
 
 if (data.value) await navigateTo('/')
 
-const callbackUrl = computed(() => {
-  const callbackUrlParam = route.query.callbackUrl
-  return typeof callbackUrlParam === "string" && callbackUrlParam.length > 0 ? callbackUrlParam : "/"
-})
-
-const tab = ref(0)
-const TABS = ['Вход', 'Регистрация']
+function getInviteCodeFromQuery() {
+  const query = route.query.inviteCode
+  const code = Array.isArray(query) ? query[0] : query
+  return code ?? ''
+}
 
 const username = ref('')
 const password = ref('')
-const inviteCode = ref('')
+const inviteCode = ref(getInviteCodeFromQuery())
+const loading = ref(false)
 
-const errorMessage = ref('')
+const loginForm = ref<InstanceType<typeof UserLogin> | null>(null)
 
-async function authCallWrapper(callback: () => Promise<void>) {
-  errorMessage.value = ''
-  isLoading.value = true
-  await callback()
-  isLoading.value = false
-}
-
-const isLoading = ref(false)
-async function login() {
-  await authCallWrapper(async () => {
-    const signInResult = await signIn('credentials', { username: username.value, password: password.value, callbackUrl: callbackUrl.value, redirect: false })
-    if (!signInResult) throw new Error('Uhoh, something went wrong')
-    const { error, url } = signInResult
-
-    if (error) errorMessage.value = 'Неправильный логин или пароль'
-    else navigateTo(url, { external: true })
-  })
-}
-
-async function register() {
-  await authCallWrapper(async () => {
-    const response = await $fetch('/api/auth/register', {
-      method: 'post',
-      body: {
-        username: username.value,
-        password: password.value,
-        inviteCode: inviteCode.value,
-      }
-    }).catch(error => {
-      const statusCode = error.statusCode as number
-
-      errorMessage.value = (() => {
-        switch (statusCode) {
-          case 400: return 'Неправильный формат данных'
-          case 403: return 'Неверный код приглашения'
-          case 409: return 'Данный пользователь уже существует'
-          default: return 'Неизвестная ошибка'
-        }
-      })()
-    })
-
-    if (response) await login()
-  })
-}
+const tab = ref(Boolean(inviteCode.value))
+const TABS = ['Вход', 'Регистрация']
 </script>
 
 <template>
   <div class="wrapper">
     <v-sheet class="card">
-      <v-tabs v-model="tab" color="deep-purple-accent-4" align-tabs="center" grow>
+      <v-tabs v-model="tab" color="deep-purple-accent-4" align-tabs="center" grow :disabled="loading">
         <v-tab v-for="tab in TABS" :value="tab">{{ tab }}</v-tab>
       </v-tabs>
       <v-window v-model="tab">
         <v-window-item :value="TABS[0]">
-          <form>
-            <v-text-field v-model="username" label="Логин" placeholder="вася нагибатор 666" :error-messages="errorMessage" required />
-            <v-text-field v-model="password" type="password" label="Пароль" required />
-
-            <v-btn class="bg-primary" :loading="isLoading" @click="login">Войти</v-btn>
-          </form>
+          <user-login
+            ref="loginForm"
+            v-model:username="username"
+            v-model:password="password"
+            v-model:loading="loading"
+          />
         </v-window-item>
         <v-window-item :value="TABS[1]">
-          <form>
-            <v-text-field v-model="username" label="Логин" placeholder="вася нагибатор 666" :error-messages="errorMessage" required />
-            <v-text-field v-model="password" type="password" label="Пароль" required />
-            <v-text-field v-model="inviteCode" label="Код приглашения" required />
-
-            <v-btn class="bg-secondary" :loading="isLoading" @click="register">Зарегистрироваться</v-btn>
-          </form>
+          <user-register
+            v-model:username="username"
+            v-model:password="password"
+            v-model:invite-code="inviteCode"
+            v-model:loading="loading"
+            @success="loginForm?.login"
+          />
         </v-window-item>
       </v-window>
     </v-sheet>
