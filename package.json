@@ -43,6 +43,7 @@
     "events": "^3.3.0",
     "fuse.js": "^6.6.2",
     "lodash-es": "^4.17.21",
+    "nanoid": "^5.0.4",
     "next-auth": "^4.22.1",
     "vue-masonry": "^0.16.0",
     "ydb-sdk": "^4.6.0",
