@@ -19,7 +19,7 @@ const loading = ref(false)
 
 const loginForm = ref<InstanceType<typeof UserLogin> | null>(null)
 
-const tab = ref(Boolean(inviteCode.value))
+const tab = ref(Number(Boolean(inviteCode.value)))
 const TABS = ['Вход', 'Регистрация']
 </script>
 
@@ -27,10 +27,10 @@ const TABS = ['Вход', 'Регистрация']
   <div class="wrapper">
     <v-sheet class="card">
       <v-tabs v-model="tab" color="deep-purple-accent-4" align-tabs="center" grow :disabled="loading">
-        <v-tab v-for="tab in TABS" :value="tab">{{ tab }}</v-tab>
+        <v-tab v-for="(tab, index) in TABS" :value="index">{{ tab }}</v-tab>
       </v-tabs>
       <v-window v-model="tab">
-        <v-window-item :value="TABS[0]">
+        <v-window-item :value="0">
           <user-login
             ref="loginForm"
             v-model:username="username"
@@ -38,7 +38,7 @@ const TABS = ['Вход', 'Регистрация']
             v-model:loading="loading"
           />
         </v-window-item>
-        <v-window-item :value="TABS[1]">
+        <v-window-item :value="1">
           <user-register
             v-model:username="username"
             v-model:password="password"

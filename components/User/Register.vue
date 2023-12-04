@@ -49,6 +49,8 @@ async function register() {
   else emit('update:loading', false)
 }
 
+// TODO: perhaps this combo form could be refactored into a generic component with some useAppForm composable
+
 const forms = [
   { name: 'username', props: { label: "Логин", placeholder: "вася нагибатор 666" } },
   { name: 'password', props: { label: "Пароль", type: "password" } },
