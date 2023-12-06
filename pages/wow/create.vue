@@ -36,7 +36,7 @@ async function publish() {
     }
   })
 
-  if (response === true) navigateTo('/wow')
+  if (response === true) navigateTo('/wow', { external: true })
   isLoading.value = false
 }
 </script>
