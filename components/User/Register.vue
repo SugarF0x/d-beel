@@ -68,6 +68,7 @@ const forms = [
       :error-messages="errors[form.name]"
       :disabled="loading"
       required
+      @keydown.enter="register"
       v-bind="form.props"
     />
 

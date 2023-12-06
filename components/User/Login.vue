@@ -40,8 +40,8 @@ async function login() {
 
 <template>
   <form>
-    <v-text-field :model-value="username" @update:model-value="e => $emit('update:username', e)" label="Логин" placeholder="вася нагибатор 666" :disabled="loading" required hide-details />
-    <v-text-field :model-value="password" @update:model-value="e => $emit('update:password', e)" type="password" label="Пароль" :error-messages="errorMessage" :disabled="loading" required />
+    <v-text-field :model-value="username" @update:model-value="e => $emit('update:username', e)" label="Логин" placeholder="вася нагибатор 666" :disabled="loading" required hide-details @keydown.enter="login" />
+    <v-text-field :model-value="password" @update:model-value="e => $emit('update:password', e)" type="password" label="Пароль" :error-messages="errorMessage" :disabled="loading" required @keydown.enter="login" />
 
     <v-btn class="bg-primary" :loading="loading" @click="login">Войти</v-btn>
   </form>
