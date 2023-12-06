@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   const { user: { username: created_by } } = await useServerAuth(event)
 
   return await useYDBSession(async session => (
-    await ydbGet(session, `
+    await ydbGet<{ key: string, claimed_by?: string }>(session, `
       DECLARE $created_by AS Utf8;
 
       SELECT key, claimed_by
