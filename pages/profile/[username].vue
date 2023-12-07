@@ -74,10 +74,10 @@ function getInviteLink(key: string): string {
                   <td class="text-right">{{ item.claimed_by ?? '-' }}</td>
                   <td class="share-cell">
                     <use-clipboard v-slot="{ copy, copied }" :source="item.key">
-                      <v-btn icon="mdi-content-copy" density="comfortable" :color="copied ? 'success' : 'primary'" @click="copy()" />
+                      <v-btn icon="mdi-content-copy" density="comfortable" :color="copied ? 'success' : 'primary'" @click="copy()" :disabled="!!item.claimed_by" />
                     </use-clipboard>
                     <use-clipboard v-slot="{ copy, copied }" :source="getInviteLink(item.key)">
-                      <v-btn icon="mdi-link" density="comfortable" :color="copied ? 'success' : 'secondary'" @click="copy()" />
+                      <v-btn icon="mdi-link" density="comfortable" :color="copied ? 'success' : 'secondary'" @click="copy()" :disabled="!!item.claimed_by" />
                     </use-clipboard>
                   </td>
                 </tr>
