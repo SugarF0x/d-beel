@@ -1,15 +1,30 @@
 <script setup lang="ts">
+import { Ref } from '#imports'
 import { format } from "date-fns"
-import { computed } from '#imports'
+import { FetchError } from "ofetch"
 
+const { data: authData } = useAuth()
 const route = useRoute()
 const username = computed(() => String(route.params.username))
 
-const { pending, error, data } = useFetch(`/api/user/info`, { params: { username } })
-const info = computed<{ totalPosts: number, joinedAt: string }>(() => {
-  if (!data.value || (data.value && 'statusCode' in data.value)) return { totalPosts: 0, joinedAt: '' }
-  return data.value
+const infoQuery = useAsyncData(`user-${username}-info`, async () => {
+  const [info, keys] = await Promise.all([
+    $fetch('/api/user/info', { params: { username: username.value } }),
+    authData.value?.user.username === username.value ? $fetch('/api/user/invite-code') : undefined,
+  ])
+
+  if (keys) inviteKeys.value = keys
+
+  return {
+    totalPosts: info.totalPosts,
+    joinedAt: new Date(info.joinedAt)
+  }
 })
+
+const { data, pending } = infoQuery
+const error = infoQuery.error as Ref<null | FetchError>
+
+const inviteKeys = ref<{ key: string, claimed_by?: string }[]>([])
 
 const title = computed(() => (error.value?.statusCode ? String(error.value.statusCode) + ': ' : '') + username.value)
 useHead({ title })
@@ -18,18 +33,51 @@ useHead({ title })
 <template>
   <v-container class="wrapper">
     <v-skeleton-loader
-      :loading="pending"
+      v-if="pending"
       type="list-item-two-line"
       class="skeleton"
-    >
+    />
+    <template v-else>
       <div v-if="error && error.statusCode === 404" class="not-found">
         <h1>Пользователь не найден</h1>
       </div>
-      <v-list-item v-else :title="username">
-        <div>Количество постов: {{ info.totalPosts }}</div>
-        <div>Присоединился: {{ format(new Date(info.joinedAt), 'dd.MM.yyyy') }}</div>
-      </v-list-item>
-    </v-skeleton-loader>
+      <div v-else style="display: flex; flex-direction: column; gap: 12px;">
+        <v-card>
+          <v-card-title>{{ username }}</v-card-title>
+          <v-card-text>
+            <div>Количество постов: {{ data?.totalPosts }}</div>
+            <div>Присоединился: {{ format(data?.joinedAt ?? 0, 'dd.MM.yyyy') }}</div>
+          </v-card-text>
+        </v-card>
+        <v-card v-if="inviteKeys.length">
+          <v-card-title>Ключи</v-card-title>
+          <v-card-text>
+            <v-table>
+              <thead>
+                <tr>
+                  <th class="text-left">Ключ</th>
+                  <th class="text-left">Получатель</th>
+                  <th class="text-left">Поделиться</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="item in inviteKeys"
+                  :key="item.key"
+                >
+                  <td>{{ item.key }}</td>
+                  <td class="text-right">{{ item.claimed_by ?? '-' }}</td>
+                  <td class="share-cell">
+                    <v-btn icon="mdi-content-copy" density="comfortable" color="primary" />
+                    <v-btn icon="mdi-link" density="comfortable" color="secondary" />
+                  </td>
+                </tr>
+              </tbody>
+            </v-table>
+          </v-card-text>
+        </v-card>
+      </div>
+    </template>
   </v-container>
 </template>
 
@@ -49,5 +97,11 @@ useHead({ title })
 .not-found {
   padding: 8px;
   margin: 0 auto;
+}
+
+.share-cell {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 </style>
