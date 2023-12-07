@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@invictus.codes/nuxt-vuetify": "^0.3.0",
-    "@vueuse/components": "^10.2.1",
+    "@vueuse/components": "^10.7.0",
     "@vueuse/nuxt": "^10.2.1",
     "@yandex-cloud/nodejs-sdk": "^2.4.7",
     "blizzapi": "^2.6.1",

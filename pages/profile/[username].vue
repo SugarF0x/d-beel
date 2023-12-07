@@ -2,6 +2,7 @@
 import { Ref } from '#imports'
 import { format } from "date-fns"
 import { FetchError } from "ofetch"
+import { UseClipboard } from "@vueuse/components"
 
 const { data: authData } = useAuth()
 const route = useRoute()
@@ -28,6 +29,10 @@ const inviteKeys = ref<{ key: string, claimed_by?: string }[]>([])
 
 const title = computed(() => (error.value?.statusCode ? String(error.value.statusCode) + ': ' : '') + username.value)
 useHead({ title })
+
+function getInviteLink(key: string): string {
+  return `${location.origin}/login?inviteCode=${key}`
+}
 </script>
 
 <template>
@@ -68,8 +73,12 @@ useHead({ title })
                   <td>{{ item.key }}</td>
                   <td class="text-right">{{ item.claimed_by ?? '-' }}</td>
                   <td class="share-cell">
-                    <v-btn icon="mdi-content-copy" density="comfortable" color="primary" />
-                    <v-btn icon="mdi-link" density="comfortable" color="secondary" />
+                    <use-clipboard v-slot="{ copy }" :source="item.key">
+                      <v-btn icon="mdi-content-copy" density="comfortable" color="primary" @click="copy()" />
+                    </use-clipboard>
+                    <use-clipboard v-slot="{ copy }" :source="getInviteLink(item.key)">
+                      <v-btn icon="mdi-link" density="comfortable" color="secondary" @click="copy()" />
+                    </use-clipboard>
                   </td>
                 </tr>
               </tbody>
