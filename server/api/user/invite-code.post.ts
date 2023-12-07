@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
     await ydbPost(session, `
       DECLARE $key AS Utf8;
       DECLARE $created_by AS Utf8;
-      DECLARE $created_at AS Utf8;
+      DECLARE $created_at AS Datetime;
       
       INSERT INTO user_invite (key, created_by, created_at)
       VALUES ($key, $created_by, $created_at);

@@ -33,6 +33,18 @@ useHead({ title })
 function getInviteLink(key: string): string {
   return `${location.origin}/login?inviteCode=${key}`
 }
+
+const loadingNewKey = ref(false)
+async function requestNewKey() {
+  loadingNewKey.value = true
+
+  try {
+    const key = await $fetch('/api/user/invite-code', { method: 'POST' })
+    inviteKeys.value.unshift({ key })
+  } finally {
+    loadingNewKey.value = false
+  }
+}
 </script>
 
 <template>
@@ -55,7 +67,10 @@ function getInviteLink(key: string): string {
           </v-card-text>
         </v-card>
         <v-card v-if="inviteKeys.length">
-          <v-card-title>Ключи</v-card-title>
+          <v-card-title class="keys-title">
+            <div>Ключи</div>
+            <v-btn icon="mdi-plus" color="info" density="comfortable" @click="requestNewKey" :loading="loadingNewKey" />
+          </v-card-title>
           <v-card-text>
             <v-table>
               <thead>
@@ -66,10 +81,7 @@ function getInviteLink(key: string): string {
                 </tr>
               </thead>
               <tbody>
-                <tr
-                  v-for="item in inviteKeys"
-                  :key="item.key"
-                >
+                <tr v-for="item in inviteKeys" :key="item.key" >
                   <td>{{ item.key }}</td>
                   <td class="text-right">{{ item.claimed_by ?? '-' }}</td>
                   <td class="share-cell">
@@ -112,5 +124,10 @@ function getInviteLink(key: string): string {
   display: flex;
   gap: 8px;
   align-items: center;
+}
+
+.keys-title {
+  display: flex;
+  justify-content: space-between;
 }
 </style>
