@@ -6,12 +6,14 @@ import { UseClipboard } from "@vueuse/components"
 
 const { data: authData } = useAuth()
 const route = useRoute()
+
 const username = computed(() => String(route.params.username))
+const isOwnPage = computed(() => authData.value?.user.username === username.value)
 
 const infoQuery = useAsyncData(`user-${username}-info`, async () => {
   const [info, keys] = await Promise.all([
     $fetch('/api/user/info', { params: { username: username.value } }),
-    authData.value?.user.username === username.value ? $fetch('/api/user/invite-code') : undefined,
+    isOwnPage.value ? $fetch('/api/user/invite-code') : undefined,
   ])
 
   if (keys) inviteKeys.value = keys
@@ -35,12 +37,16 @@ function getInviteLink(key: string): string {
 }
 
 const loadingNewKey = ref(false)
+const newKeyError = ref('')
 async function requestNewKey() {
+  newKeyError.value = ''
   loadingNewKey.value = true
 
   try {
     const key = await $fetch('/api/user/invite-code', { method: 'POST' })
     inviteKeys.value.unshift({ key })
+  } catch(e) {
+    newKeyError.value = (e as FetchError).data?.message ?? ''
   } finally {
     loadingNewKey.value = false
   }
@@ -66,12 +72,13 @@ async function requestNewKey() {
             <div>Присоединился: {{ format(data?.joinedAt ?? 0, 'dd.MM.yyyy') }}</div>
           </v-card-text>
         </v-card>
-        <v-card v-if="inviteKeys.length">
+        <v-card v-if="isOwnPage">
           <v-card-title class="keys-title">
             <div>Ключи</div>
             <v-btn icon="mdi-plus" color="info" density="comfortable" @click="requestNewKey" :loading="loadingNewKey" />
           </v-card-title>
           <v-card-text>
+            <div v-if="newKeyError" class="key-fetch-error">{{ newKeyError }}</div>
             <v-table>
               <thead>
                 <tr>
@@ -129,5 +136,9 @@ async function requestNewKey() {
 .keys-title {
   display: flex;
   justify-content: space-between;
+}
+
+.key-fetch-error {
+  color: red;
 }
 </style>
